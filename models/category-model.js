@@ -7,4 +7,4 @@ const categorySchema = new Schema({
 
 const Category = model('category', categorySchema);
 
-module.export = Category;
+module.exports = Category;
