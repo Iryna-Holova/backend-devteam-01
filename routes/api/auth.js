@@ -13,7 +13,7 @@ router.get("/verify/:verificationToken", ctrl.verify);
 
 router.post(
   "/verify",
-  isValidBody(schemas.emailSchema, "missing required field email"),
+  isValidBody(schemas.emailSchema),
   ctrl.resendVerify
 );
 
@@ -26,7 +26,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
 router.patch(
   "/subscription",
   authenticate,
-  isValidBody(schemas.updateSubscriptionSchema, "missing field subscription"),
+  isValidBody(schemas.updateSubscriptionSchema),
   ctrl.updateSubscription
 );
 
