@@ -48,53 +48,22 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  password: Joi.string().min(6).required().messages({
-    "string.base": "Password must be a string",
-    "string.empty": "Password is required",
-    "any.required": "Password is required",
-    "string.min": "Password must contain at least 6 characters",
-  }),
-  email: Joi.string().pattern(emailRegexp).required().messages({
-    "string.base": "Invalid email",
-    "string.empty": "Email is required",
-    "string.pattern.base": "Invalid email",
-    "any.required": "Email is required",
-  }),
+  password: Joi.string().min(6).required(),
+  email: Joi.string().pattern(emailRegexp).required(),
   subscription: Joi.string().valid("starter", "pro", "business"),
 });
 
 const emailSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required().messages({
-    "string.base": "Invalid email",
-    "string.empty": "Email is required",
-    "string.pattern.base": "Invalid email",
-    "any.required": "missing required field email",
-  }),
+  email: Joi.string().pattern(emailRegexp).required(),
 });
 
 const loginSchema = Joi.object({
-  password: Joi.string().min(6).required().messages({
-    "string.base": "Password must be a string",
-    "string.empty": "Password is required",
-    "any.required": "Password is required",
-    "string.min": "Password must contain at least 6 characters",
-  }),
-  email: Joi.string().pattern(emailRegexp).required().messages({
-    "string.base": "Invalid email",
-    "string.empty": "Email is required",
-    "string.pattern.base": "Invalid email",
-    "any.required": "Email is required",
-  }),
+  password: Joi.string().min(6).required(),
+  email: Joi.string().pattern(emailRegexp).required(),
 });
 
 const updateSubscriptionSchema = Joi.object({
-  subscription: Joi.string()
-    .valid("starter", "pro", "business")
-    .required()
-    .messages({
-      "any.only": "subscription must be one of: starter, pro, business",
-      "any.required": "subscription type is required",
-    }),
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
 });
 
 const schemas = {
