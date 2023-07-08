@@ -8,7 +8,7 @@ const { uid } = require("uid");
 
 const { User } = require("../models/user-model");
 
-const { ctrlWrapper, HttpError, sendEmail } = require("../helpers");
+const { ctrlWrapper, HttpError, sendEmail, cloudinary } = require("../helpers");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
@@ -162,29 +162,65 @@ const getCurrent = async (req, res) => {
 //   res.json(result);
 // };
 
-const updateAvatar = async (req, res) => {
+// const updateAvatar = async (req, res) => {
+//   const { _id } = req.user;
+//   const { path: oldPath, filename } = req.file;
+//   const newName = `${_id}_${filename}`;
+//   const newPath = path.join(avatarDir, newName);
+
+//   await Jimp.read(oldPath)
+//     .then((image) => {
+//       image.cover(250, 250).write(newPath);
+//     })
+//     .catch((err) => {
+//       fs.unlink(oldPath);
+//       throw HttpError(400, err.message);
+//     });
+
+//   fs.unlink(oldPath);
+//   const avatarURL = path.join("avatars", newName);
+//   await User.findByIdAndUpdate(_id, { avatarURL });
+
+//   res.json({
+//     avatarURL,
+//   });
+// };
+
+const updateAvatar = async (req, res, next) => {
+  const { path: tempFilePath, mimetype } = req.file;
   const { _id } = req.user;
-  const { path: oldPath, filename } = req.file;
-  const newName = `${_id}_${filename}`;
-  const newPath = path.join(avatarDir, newName);
 
-  await Jimp.read(oldPath)
-    .then((image) => {
-      image.cover(250, 250).write(newPath);
-    })
-    .catch((err) => {
-      fs.unlink(oldPath);
-      throw HttpError(400, err.message);
-    });
+  if (!tempFilePath) {
+    throw HttpError(400, "No file uploaded");
+  }
 
-  fs.unlink(oldPath);
-  const avatarURL = path.join("avatars", newName);
-  await User.findByIdAndUpdate(_id, { avatarURL });
+  const fileData = await cloudinary.uploader.upload(tempFilePath, {
+    folder: "avatars"
+  });
 
-  res.json({
-    avatarURL,
+  await fs.unlink(tempFilePath);
+
+  const image = await Jimp.read(fileData.secure_url);
+  image.resize(250, 250).quality(80);
+
+  const processedAvatarPath = `temp/${_id}_avatar.jpg`;
+  await image.writeAsync(processedAvatarPath);
+
+  const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace("image/", ".")}`;
+  const avatarPath = `public/avatars/${uniqueFilename}`;
+  await fs.rename(processedAvatarPath, avatarPath);
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { avatarURL: `/avatars/${uniqueFilename}` },
+    { new: true }
+  );
+
+  res.status(200).json({
+    avatarURL: updatedUser.avatarURL
   });
 };
+
 
 module.exports = {
   register: ctrlWrapper(register),
