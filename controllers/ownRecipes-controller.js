@@ -1,11 +1,11 @@
 const { Recipe } = require("../models/recipe-model");
-const { ctrlWrapper } = require("../helpers");
+const { ctrlWrapper, HttpError } = require("../helpers");
 
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
   const recipe = await Recipe.find({ owner }).populate("owner", "name email");
 
-  res.status(201).json(recipe);
+  res.json(recipe);
 }
 
 async function create(req, res) {
@@ -19,10 +19,13 @@ async function create(req, res) {
 
 async function deleteById(req, res) {
   const { id } = req.params;
-  console.log(id);
-  await Recipe.findByIdAndRemove(id);
+  const response = await Recipe.findByIdAndRemove({ _id: id });
 
-  res.status(204).end();
+  if (!response) {
+    throw HttpError(404, "The recipe not found");
+  }
+
+  res.json({ message: "The recipe deleted" });
 }
 
 module.exports = {

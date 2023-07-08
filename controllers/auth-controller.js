@@ -23,33 +23,38 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const verificationToken = uid();
-  const avatarURL = gravatar.url(email);
+  const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
+  const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
+
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    avatarURL: normalizedAvatarUrl,
     verificationToken,
   });
 
   const verifyEmail = {
     to: email,
     subject: "Email verification",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}users/verify/${verificationToken}">Click to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
+      name: newUser.name,
       email: newUser.email,
-      subscription: newUser.subscription,
+      avatarURL: normalizedAvatarUrl
+      // subscription: newUser.subscription,
     },
   });
 };
 
 const verify = async (req, res) => {
   const { verificationToken } = req.params;
+
   const user = await User.findOne({ verificationToken });
   if (!user) {
     throw HttpError(404, "User not found");
@@ -60,32 +65,40 @@ const verify = async (req, res) => {
     verificationToken: null,
   });
 
-  res.json({
+  res.status(200).json({
     message: "Verification successful",
   });
 };
 
+
 const resendVerify = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
+
   if (!user) {
     throw HttpError(401, "User not found");
   }
+
   if (user.verify) {
     throw HttpError(400, "Verification has already been passed");
+  }
+
+  let verificationToken = user.verificationToken;
+
+  if (!verificationToken) {
+    verificationToken = uid();
+    user.verificationToken = verificationToken;
+    await user.save();
   }
 
   const verifyEmail = {
     to: email,
     subject: "Email verification",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}users/verify/${user.verificationToken}">Click to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
-
-  res.json({
-    message: "Verification email sent",
-  });
+  res.status(200).json({ message: "Verification email sent" });
 };
 
 const login = async (req, res) => {
@@ -107,11 +120,11 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.json({
+  res.status(201).json({
     token,
     user: {
       email: user.email,
-      subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };
@@ -124,20 +137,30 @@ const logout = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { email } = req.user;
 
-  res.json({
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  const { name, avatarURL, verify } = user;
+
+  res.status(200).json({
     email,
-    subscription,
+    name,
+    avatarURL: avatarURL,
+    verify,
   });
 };
 
-const updateSubscription = async (req, res) => {
-  const { _id } = req.user;
-  const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
+// const updateSubscription = async (req, res) => {
+//   const { _id } = req.user;
+//   const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
 
-  res.json(result);
-};
+//   res.json(result);
+// };
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
@@ -170,6 +193,6 @@ module.exports = {
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
-  updateSubscription: ctrlWrapper(updateSubscription),
+  // updateSubscription: ctrlWrapper(updateSubscription),
   updateAvatar: ctrlWrapper(updateAvatar),
 };
