@@ -12,6 +12,10 @@ const recipeSchema = new Schema({
   preview: String,
   time: String,
   youtube: String,
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+  },
   tags: [String],
   ingredients: [
     {
@@ -49,10 +53,6 @@ const createSchema = Joi.object().keys({
   preview: Joi.string().required(),
   time: Joi.string().required(),
   youtube: Joi.string().required(),
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-  },
   tags: Joi.array().items(Joi.string()),
   ingredients: Joi.array()
     .items(

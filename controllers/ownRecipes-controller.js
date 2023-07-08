@@ -2,18 +2,18 @@ const { Recipe } = require("../models/recipe-model");
 const { ctrlWrapper } = require("../helpers");
 
 async function getOwn(req, res) {
-  // const { _id: owner } = req.user;
-  // const recipe = await Recipe.find({ owner }).populate("owner", "name email");
-  const recipe = await Recipe.find();
+  const { _id: owner } = req.user;
+  const recipe = await Recipe.find({ owner }).populate("owner", "name email");
 
   res.status(201).json(recipe);
 }
 
 async function create(req, res) {
   const { body } = req;
-  // const { _id: owner } = req.user;
-  // const recipe = await Recipe.create({ ...body, owner });
-  const recipe = await Recipe.create({ ...body });
+  const { _id: owner } = req.user;
+
+  console.log(owner);
+  const recipe = await Recipe.create({ ...body, owner });
 
   res.status(201).json(recipe);
 }
