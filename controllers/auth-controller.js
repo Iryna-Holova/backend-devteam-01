@@ -40,7 +40,7 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.status(201).json({
+  res.json({
     user: {
       name: newUser.name,
       email: newUser.email,
@@ -62,7 +62,7 @@ const verify = async (req, res) => {
     verificationToken: null,
   });
 
-  res.status(200).json({
+  res.json({
     message: "Verification successful",
   });
 };
@@ -94,7 +94,7 @@ const resendVerify = async (req, res) => {
   };
 
   await sendEmail(verifyEmail);
-  res.status(200).json({ message: "Verification email sent" });
+  res.json({ message: "Verification email sent" });
 };
 
 const login = async (req, res) => {
@@ -116,7 +116,7 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.status(201).json({
+  res.json({
     token,
     user: {
       email: user.email,
@@ -143,7 +143,7 @@ const getCurrent = async (req, res) => {
 
   const { name, avatarURL, verify } = user;
 
-  res.status(200).json({
+  res.json({
     email,
     name,
     avatarURL: avatarURL,
