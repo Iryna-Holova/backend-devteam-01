@@ -23,18 +23,6 @@ router.post("/logout", authenticate, ctrl.logout);
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
-// router.patch(
-//   "/subscription",
-//   authenticate,
-//   isValidBody(schemas.updateSubscriptionSchema),
-//   ctrl.updateSubscription
-// );
-
-router.patch(
-  "/avatars",
-  authenticate,
-  upload.single("avatar"),
-  ctrl.updateAvatar
-);
+router.patch("/update", authenticate, upload.single("avatar"), ctrl.updateUserProfile);
 
 module.exports = router;

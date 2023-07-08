@@ -12,8 +12,6 @@ const { ctrlWrapper, HttpError, sendEmail, cloudinary } = require("../helpers");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
-const avatarDir = path.resolve("public", "avatars");
-
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -46,8 +44,7 @@ const register = async (req, res) => {
     user: {
       name: newUser.name,
       email: newUser.email,
-      avatarURL: normalizedAvatarUrl
-      // subscription: newUser.subscription,
+      avatarURL: normalizedAvatarUrl,
     },
   });
 };
@@ -69,7 +66,6 @@ const verify = async (req, res) => {
     message: "Verification successful",
   });
 };
-
 
 const resendVerify = async (req, res) => {
   const { email } = req.body;
@@ -155,72 +151,54 @@ const getCurrent = async (req, res) => {
   });
 };
 
-// const updateSubscription = async (req, res) => {
-//   const { _id } = req.user;
-//   const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
-
-//   res.json(result);
-// };
-
-// const updateAvatar = async (req, res) => {
-//   const { _id } = req.user;
-//   const { path: oldPath, filename } = req.file;
-//   const newName = `${_id}_${filename}`;
-//   const newPath = path.join(avatarDir, newName);
-
-//   await Jimp.read(oldPath)
-//     .then((image) => {
-//       image.cover(250, 250).write(newPath);
-//     })
-//     .catch((err) => {
-//       fs.unlink(oldPath);
-//       throw HttpError(400, err.message);
-//     });
-
-//   fs.unlink(oldPath);
-//   const avatarURL = path.join("avatars", newName);
-//   await User.findByIdAndUpdate(_id, { avatarURL });
-
-//   res.json({
-//     avatarURL,
-//   });
-// };
-
-const updateAvatar = async (req, res, next) => {
-  const { path: tempFilePath, mimetype } = req.file;
+const updateUserProfile = async (req, res) => {
   const { _id } = req.user;
+  const { name } = req.body;
 
-  if (!tempFilePath) {
-    throw HttpError(400, "No file uploaded");
+  let updatedUser = {};
+
+  if (name) {
+    updatedUser = await User.findByIdAndUpdate(_id, { name }, { new: true });
   }
 
-  const fileData = await cloudinary.uploader.upload(tempFilePath, {
-    folder: "avatars"
-  });
+  if (req.file) {
+    const { path: tempFilePath, mimetype } = req.file;
 
-  await fs.unlink(tempFilePath);
+    if (!tempFilePath) {
+      throw new HttpError(400, "No file uploaded");
+    }
 
-  const image = await Jimp.read(fileData.secure_url);
-  image.resize(250, 250).quality(80);
+    const fileData = await cloudinary.uploader.upload(tempFilePath, {
+      folder: "avatars"
+    });
 
-  const processedAvatarPath = `temp/${_id}_avatar.jpg`;
-  await image.writeAsync(processedAvatarPath);
+    await fs.unlink(tempFilePath);
 
-  const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace("image/", ".")}`;
-  const avatarPath = `public/avatars/${uniqueFilename}`;
-  await fs.rename(processedAvatarPath, avatarPath);
+    const image = await Jimp.read(fileData.secure_url);
+    image.resize(250, 250).quality(80);
 
-  const updatedUser = await User.findByIdAndUpdate(
-    _id,
-    { avatarURL: `/avatars/${uniqueFilename}` },
-    { new: true }
-  );
+    const processedAvatarPath = `temp/${_id}_avatar.jpg`;
+    await image.writeAsync(processedAvatarPath);
 
-  res.status(200).json({
-    avatarURL: updatedUser.avatarURL
+    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace("image/", ".")}`;
+    const avatarPath = `public/avatars/${uniqueFilename}`;
+    await fs.rename(processedAvatarPath, avatarPath);
+
+    updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { avatarURL: `/avatars/${uniqueFilename}` },
+      { new: true }
+    );
+  }
+
+  res.json({
+    message: "User profile updated successfully",
+    user: {
+      name: updatedUser.name,
+      avatarURL: updatedUser.avatarURL,
+    },
   });
 };
-
 
 module.exports = {
   register: ctrlWrapper(register),
@@ -229,6 +207,5 @@ module.exports = {
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   getCurrent: ctrlWrapper(getCurrent),
-  // updateSubscription: ctrlWrapper(updateSubscription),
-  updateAvatar: ctrlWrapper(updateAvatar),
+  updateUserProfile: ctrlWrapper(updateUserProfile),
 };
