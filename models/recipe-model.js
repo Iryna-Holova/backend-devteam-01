@@ -1,76 +1,72 @@
 const { Schema, model } = require("mongoose");
-const { handleMongooseError } = require("../helpers");
 const Joi = require("joi");
+const { handleMongooseError } = require("../helpers");
 
 const recipeSchema = new Schema({
-  title: String,
-  category: String,
-  area: String,
-  instructions: String,
-  description: String,
-  thumb: String,
-  preview: String,
-  time: String,
-  youtube: String,
-  tags: [String],
-  ingredients: [
-    {
-      id: { type: String, ref: "ingredient" },
-      measure: String,
+  title: {
+    type: String,
+    minlength: [2, "Title must contain at least 2 characters"],
+    required: [true, "Title is required"],
+    unique: true,
+    trim: true,
+  },
+  category: {
+    type: String,
+    required: [true, "Category is required"],
+  },
+  area: { type: String },
+  instruction: { type: String, required: [true, "Instruction is required"] },
+  description: { type: String, required: [true, "Description is required"] },
+  thumb: { type: String },
+  preview: { type: String },
+  time: { type: String, required: [true, "Time is required"] },
+  yuotube: { type: String },
+  tags: { type: String },
+  ingredients: {
+    type: [
+      {
+        id: {
+          type: String,
+          required: [true, "Ingredient is required"],
+        },
+        measure: { type: String, required: [true, "Measure is required"] },
+      },
+    ],
+  },
+  favorites: {
+    type: [
+      {
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "users",
+          required: [true, "User Id is required for set Favorite"],
+        },
+      },
+    ],
+  },
+  owner: {
+    type: {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        required: [true, "User Id is required for set Favorite"],
+      },
     },
-  ],
+  },
 });
 
 recipeSchema.post("save", handleMongooseError);
-
-const createSchema = Joi.object().keys({
-  title: Joi.string().required(),
-  category: Joi.valid(
-    "Seafood",
-    "Lamb",
-    "Starter",
-    "Chicken",
-    "Beef",
-    "Dessert",
-    "Vegan",
-    "Pork",
-    "Vegetarian",
-    "Miscellaneous",
-    "Pasta",
-    "Breakfast",
-    "Side",
-    "Goat",
-    "Soup"
-  ).required(),
-  area: Joi.string().required(),
-  instructions: Joi.string().required(),
-  description: Joi.string().required(),
-  thumb: Joi.string().required(),
-  preview: Joi.string().required(),
-  time: Joi.string().required(),
-  youtube: Joi.string().required(),
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-  },
-  tags: Joi.array().items(Joi.string()),
-  ingredients: Joi.array()
-    .items(
-      Joi.object({
-        id: Joi.string().required(),
-        measure: Joi.string().required(),
-      })
-    )
-    .required(),
-});
-
 const Recipe = model("recipe", recipeSchema);
 
-const ownRecipeSchemas = {
-  createSchema,
+const limitMainPageSchema = Joi.object({
+  limit: Joi.number().default(1).valid(1, 2, 4),
+});
+
+const schemas = {
+  limitMainPageSchema,
 };
 
 module.exports = {
   Recipe,
-  ownRecipeSchemas,
+  schemas,
 };
