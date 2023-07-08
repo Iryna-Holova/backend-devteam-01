@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../helpers");
 
-const catecories = [
+const categories = [
   "Seafood",
   "Lamb",
   "Starter",
@@ -30,7 +30,7 @@ const recipeSchema = new Schema({
   },
   category: {
     type: String,
-    enum: catecories,
+    enum: categories,
     required: [true, "Category is required"],
   },
   area: { type: String },
@@ -63,7 +63,7 @@ recipeSchema.post("save", handleMongooseError);
 
 const createOwnRecipeSchema = Joi.object({
   title: Joi.string().min(2).trim().required(),
-  category: Joi.valid(...catecories).required(),
+  category: Joi.valid(...categories).required(),
   area: Joi.string(),
   instructions: Joi.string().required(),
   description: Joi.string().required(),
