@@ -20,7 +20,7 @@ const recipeSchema = new Schema({
   thumb: { type: String },
   preview: { type: String },
   time: { type: String, required: [true, "Time is required"] },
-  yuotube: { type: String },
+  youtube: { type: String },
   tags: { type: String },
   ingredients: {
     type: [
@@ -28,6 +28,7 @@ const recipeSchema = new Schema({
         id: {
           type: String,
           required: [true, "Ingredient is required"],
+          ref: "ingredient",
         },
         measure: { type: String, required: [true, "Measure is required"] },
       },
