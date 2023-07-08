@@ -57,6 +57,44 @@ const recipeSchema = new Schema({
 });
 
 recipeSchema.post("save", handleMongooseError);
+
+const createOwnRecipeSchema = Joi.object({
+  title: Joi.string().min(2).trim().required(),
+  category: Joi.valid(
+    "Seafood",
+    "Lamb",
+    "Starter",
+    "Chicken",
+    "Beef",
+    "Dessert",
+    "Vegan",
+    "Pork",
+    "Vegetarian",
+    "Miscellaneous",
+    "Pasta",
+    "Breakfast",
+    "Side",
+    "Goat",
+    "Soup"
+  ).required(),
+  area: Joi.string(),
+  instructions: Joi.string().required(),
+  description: Joi.string().required(),
+  thumb: Joi.string(),
+  preview: Joi.string(),
+  time: Joi.string().required(),
+  youtube: Joi.string(),
+  tags: Joi.array().items(Joi.string()),
+  ingredients: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.string().required(),
+        measure: Joi.string().required(),
+      })
+    )
+    .required(),
+});
+
 const Recipe = model("recipe", recipeSchema);
 
 const limitMainPageSchema = Joi.object({
@@ -65,6 +103,7 @@ const limitMainPageSchema = Joi.object({
 
 const schemas = {
   limitMainPageSchema,
+  createOwnRecipeSchema,
 };
 
 module.exports = {

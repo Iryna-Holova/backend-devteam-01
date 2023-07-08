@@ -1,7 +1,7 @@
 const Ingredients = require("../models/indredients-model");
 const { ctrlWrapper } = require("../helpers");
 const upCaseFirstLetter = require("../helpers/upCaseFirstLetter");
-const Recipe = require("../models/recipe-model");
+const { Recipe } = require("../models/recipe-model");
 
 async function getAll(req, res) {
   const result = await Ingredients.find({}).sort({ name: "asc" });
