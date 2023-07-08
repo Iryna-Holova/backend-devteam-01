@@ -2,6 +2,24 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../helpers");
 
+const catecories = [
+  "Seafood",
+  "Lamb",
+  "Starter",
+  "Chicken",
+  "Beef",
+  "Dessert",
+  "Vegan",
+  "Pork",
+  "Vegetarian",
+  "Miscellaneous",
+  "Pasta",
+  "Breakfast",
+  "Side",
+  "Goat",
+  "Soup",
+];
+
 const recipeSchema = new Schema({
   title: {
     type: String,
@@ -12,16 +30,17 @@ const recipeSchema = new Schema({
   },
   category: {
     type: String,
+    enum: catecories,
     required: [true, "Category is required"],
   },
   area: { type: String },
-  instruction: { type: String, required: [true, "Instruction is required"] },
+  instructions: { type: String, required: [true, "Instruction is required"] },
   description: { type: String, required: [true, "Description is required"] },
   thumb: { type: String },
   preview: { type: String },
   time: { type: String, required: [true, "Time is required"] },
   youtube: { type: String },
-  tags: { type: String },
+  tags: { type: [String] },
   ingredients: {
     type: [
       {
@@ -34,25 +53,9 @@ const recipeSchema = new Schema({
       },
     ],
   },
-  favorites: {
-    type: [
-      {
-        userId: {
-          type: Schema.Types.ObjectId,
-          ref: "users",
-          required: [true, "User Id is required for set Favorite"],
-        },
-      },
-    ],
-  },
   owner: {
-    type: {
-      userId: {
-        type: Schema.Types.ObjectId,
-        ref: "users",
-        required: [true, "User Id is required for set Favorite"],
-      },
-    },
+    type: Schema.Types.ObjectId,
+    ref: "user",
   },
 });
 
@@ -60,23 +63,7 @@ recipeSchema.post("save", handleMongooseError);
 
 const createOwnRecipeSchema = Joi.object({
   title: Joi.string().min(2).trim().required(),
-  category: Joi.valid(
-    "Seafood",
-    "Lamb",
-    "Starter",
-    "Chicken",
-    "Beef",
-    "Dessert",
-    "Vegan",
-    "Pork",
-    "Vegetarian",
-    "Miscellaneous",
-    "Pasta",
-    "Breakfast",
-    "Side",
-    "Goat",
-    "Soup"
-  ).required(),
+  category: Joi.valid(...catecories).required(),
   area: Joi.string(),
   instructions: Joi.string().required(),
   description: Joi.string().required(),
