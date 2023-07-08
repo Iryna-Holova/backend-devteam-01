@@ -61,10 +61,7 @@ const Recipe = model('recipe', recipeSchema);
 //********Joi schemas */
 
 const limitMainPageSchema = Joi.object({
-  limit: Joi.number().required().default(1).valid(1, 2, 4).messages({
-    'number.valid': 'Limit must be one of 1,2 or 4',
-    'any.required': 'Missing required field Limit',
-  }),
+  limit: Joi.number().default(1).valid(1, 2, 4),
 });
 
 const schemas = {
