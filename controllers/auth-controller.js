@@ -55,26 +55,21 @@ const register = async (req, res) => {
 const verify = async (req, res) => {
   const { verificationToken } = req.params;
 
-  try {
-    const user = await User.findOne({ verificationToken });
-    if (!user) {
-      throw HttpError(404, "User not found");
-    }
-
-    await User.findByIdAndUpdate(user._id, {
-      verify: true,
-      verificationToken: null,
-    });
-
-    res.status(200).json({
-      message: "Verification successful",
-    });
-  } catch (error) {
-    console.error(error);
-    throw HttpError(500, "Server error");
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    throw HttpError(404, "User not found");
   }
 
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
+
+  res.status(200).json({
+    message: "Verification successful",
+  });
 };
+
 
 const resendVerify = async (req, res) => {
   const { email } = req.body;
@@ -102,13 +97,8 @@ const resendVerify = async (req, res) => {
     html: `<a target="_blank" href="${BASE_URL}users/verify/${user.verificationToken}">Click to verify email</a>`,
   };
 
-  try {
-    await sendEmail(verifyEmail);
-    res.status(200).json({ message: "Verification email sent" });
-  } catch (error) {
-    console.error(error);
-    throw HttpError(400, "Failed to send verification email");
-  }
+  await sendEmail(verifyEmail);
+  res.status(200).json({ message: "Verification email sent" });
 };
 
 const login = async (req, res) => {
@@ -149,8 +139,19 @@ const logout = async (req, res) => {
 const getCurrent = async (req, res) => {
   const { email } = req.user;
 
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  const { name, avatarURL, verify } = user;
+
   res.status(200).json({
     email,
+    name,
+    avatarURL: avatarURL,
+    verify,
   });
 };
 
