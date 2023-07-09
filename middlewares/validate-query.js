@@ -1,6 +1,6 @@
-const { HttpError } = require('../helpers');
+const { HttpError } = require("../helpers");
 
-const isValidQuery = schema => {
+const validateQuery = (schema) => {
   const func = (req, res, next) => {
     if (Object.keys(req.query).length) {
       const { error } = schema.validate(req.query);
@@ -13,4 +13,4 @@ const isValidQuery = schema => {
   return func;
 };
 
-module.exports = isValidQuery;
+module.exports = validateQuery;
