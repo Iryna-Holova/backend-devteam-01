@@ -62,7 +62,7 @@ const recipeSchema = new Schema(
       type: [
         {
           _id: false,
-          userId: {
+          _userId: {
             type: Schema.Types.ObjectId,
             ref: "user",
             required: [true, "User's id is required"],
