@@ -78,7 +78,7 @@ const createOwnRecipeSchema = Joi.object({
   ingredients: Joi.array()
     .items(
       Joi.object({
-        _id: Joi.string().required(),
+        id: Joi.string().hex().length(24).required(),
         measure: Joi.string().required(),
       })
     )
