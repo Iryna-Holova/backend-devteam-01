@@ -6,6 +6,7 @@ require("dotenv").config();
 const authRouter = require("./routes/api/auth");
 const recipesRouter = require("./routes/api/recipes");
 const ownRecipeRouter = require("./routes/api/ownRecipes");
+const shoppingListRouter = require("./routes/api/shopping-list");
 const ingredientsRouter = require("./routes/api/ingredients");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.static("public"));
 app.use("/users", authRouter);
 app.use("/recipes/", recipesRouter);
 app.use("/own-recipes", ownRecipeRouter);
+app.use("/shopping-list", shoppingListRouter);
 app.use("/ingredients", ingredientsRouter);
 
 app.use((req, res) => {
