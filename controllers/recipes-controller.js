@@ -57,14 +57,20 @@ const getMainPage = async (req, res) => {
 
 const getRecipesByCategory = async (req, res) => {
   const { category } = req.params;
-  const { limit = 8 } = req.query;
-  console.log(category);
+  const { limit = 8, page = 1 } = req.query;
 
-  const response = await Recipe.find({ category }).sort({ _id: -1 }).limit(limit);
-  //.populate('ingredients.id', 'name desc img');  uncomment if need or delete
+  const skip = limit * (page - 1);
 
-  if (response.length > 0) res.json(response);
-  else throw HttpError(404, `No recipes found in the ${category} category`);
+  const response = await Recipe.find({ category }).sort({ _id: -1 }).skip(skip).limit(limit);
+
+  if (response.length > 0) {
+    const total = await Recipe.where({ category }).countDocuments();
+
+    const pages = Math.ceil(total / limit);
+    const result = { total, pages, recipes: [...response] };
+
+    res.json(result);
+  } else throw HttpError(404, `No recipes found in the ${category} category`);
 };
 
 const getRecipeById = async (req, res) => {
@@ -88,8 +94,32 @@ const getRecipeById = async (req, res) => {
   } else throw HttpError(404, `No recipe found with id ${id} `);
 };
 
+const getSearchByName = async (req, res) => {
+  const { limit = 8, q = "", page = 1 } = req.query;
+  const skip = limit * (page - 1);
+
+  const title = q.trim();
+
+  const response = await Recipe.find({ title: { $regex: title, $options: "i" } })
+    .sort({ _id: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  if (response.length > 0) {
+    const total = await Recipe.where({
+      title: { $regex: title, $options: "i" },
+    }).countDocuments();
+
+    const pages = Math.ceil(total / limit);
+    const result = { total, pages, recipes: [...response] };
+
+    res.json(result);
+  } else throw HttpError(404, `No recipes found this ${q} in title`);
+};
+
 module.exports = {
   getMainPage: ctrlWrapper(getMainPage),
   getRecipesByCategory: ctrlWrapper(getRecipesByCategory),
   getRecipeById: ctrlWrapper(getRecipeById),
+  getSearchByName: ctrlWrapper(getSearchByName),
 };
