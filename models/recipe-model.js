@@ -98,7 +98,7 @@ const getByCategoryParamsSchema = Joi.object({
 });
 
 const getByCategoryBodySchema = Joi.object({
-  limit: Joi.number().required(),
+  limit: Joi.number().default(8).required(),
 });
 
 const schemas = {
