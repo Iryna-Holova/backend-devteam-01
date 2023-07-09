@@ -1,15 +1,15 @@
-const authenticate = require('./authenticate');
-const isValidId = require('./isValidId');
-const isValidBody = require('./isValidBody');
-const isValidParams = require('./isvalidparams');
-const upload = require('./upload');
-const isValidQuery = require('./isvalidquery');
+const authenticate = require("./authenticate");
+const upload = require("./upload");
+const validateBody = require("./validate-body");
+const validateId = require("./validate-id");
+const validateParams = require("./validate-params");
+const validateQuery = require("./validate-query");
 
 module.exports = {
   authenticate,
-  isValidId,
-  isValidBody,
-  isValidParams,
   upload,
-  isValidQuery,
+  validateBody,
+  validateId,
+  validateParams,
+  validateQuery,
 };

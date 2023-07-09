@@ -1,13 +1,15 @@
-const ctrlWrapper = require("./ctrlWrapper");
-const handleMongooseError = require("./handleMongooseError");
-const HttpError = require("./httpError");
-const sendEmail = require("./sendEmail");
 const cloudinary = require("./cloudinary");
+const ctrlWrapper = require("./ctrl-wrapper");
+const handleMongooseError = require("./handle-mongoose-error");
+const HttpError = require("./http-error");
+const sendEmail = require("./send-email");
+const upCaseFirstLetter = require("./up-case-first-letter");
 
 module.exports = {
+  cloudinary,
   ctrlWrapper,
   handleMongooseError,
   HttpError,
   sendEmail,
-  cloudinary,
+  upCaseFirstLetter,
 };

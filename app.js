@@ -18,9 +18,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/users", authRouter);
-app.use("/recipes/", recipesRouter);
-app.use("/own-recipes", ownRecipeRouter);
-app.use("/ingredients", ingredientsRouter);
+app.use("/api/recipes/", recipesRouter);
+app.use("/api/own-recipes", ownRecipeRouter);
+app.use("/api/ingredients", ingredientsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
