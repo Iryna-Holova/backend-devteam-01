@@ -9,12 +9,14 @@ async function getAll(req, res) {
 }
 
 async function getByName(req, res) {
+
   const { query } = req.query;
   const name = upCaseFirstLetter(query);
   const ingredients = await Ingredient.find({
     name: { $regex: name, $options: "i" },
   });
   const ingredientsId = ingredients.map((ingredient) => ingredient.id);
+
 
   const recipes = await Recipe.find({
     ingredients: {
