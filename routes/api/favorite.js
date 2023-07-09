@@ -1,18 +1,19 @@
 const express = require("express");
-const { isValidBody, isValidId, authenticate } = require("../../middlewares");
+const { validateBody, validateId, authenticate } = require("../../middlewares");
 const favoriteController = require("../../controllers/favorite-controller");
+const { schemas } = require("../../models/recipe-model");
 
 const router = express.Router();
 
 router.get("/", authenticate, favoriteController.getAll);
 
-router.post("/", authenticate, favoriteController.save);
+router.post(
+  "/",
+  authenticate,
+  validateBody(schemas.addFavoriteSchema),
+  favoriteController.save
+);
 
-// router.delete(
-//   "/:id",
-//   authenticate,
-//   isValidId,
-//   shoppingListController.deleteById
-// );
+router.delete("/:id", authenticate, validateId, favoriteController.deleteById);
 
 module.exports = router;

@@ -45,8 +45,7 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [
         {
-          _id: false,
-          id: {
+          _id: {
             type: String,
             required: [true, "Ingredient is required"],
             ref: "ingredient",
@@ -61,7 +60,14 @@ const recipeSchema = new Schema(
     },
     favorite: {
       type: [
-        { _id: false, userId: { type: Schema.Types.ObjectId, ref: "user" } },
+        {
+          _id: false,
+          userId: {
+            type: Schema.Types.ObjectId,
+            ref: "user",
+            required: [true, "User's id is required"],
+          },
+        },
       ],
       default: [],
     },
@@ -85,7 +91,7 @@ const createOwnRecipeSchema = Joi.object({
   ingredients: Joi.array()
     .items(
       Joi.object({
-        id: Joi.string().hex().length(24).required(),
+        _id: Joi.string().hex().length(24).required(),
         measure: Joi.string().required(),
       })
     )
@@ -108,11 +114,16 @@ const getByCategoryBodySchema = Joi.object({
   limit: Joi.number().required(),
 });
 
+const addFavoriteSchema = Joi.object({
+  recipeId: Joi.string().hex().length(24).required(),
+});
+
 const schemas = {
   limitMainPageSchema,
   createOwnRecipeSchema,
   getByCategoryParamsSchema,
   getByCategoryBodySchema,
+  addFavoriteSchema,
 };
 
 module.exports = {
