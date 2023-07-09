@@ -1,22 +1,24 @@
-const Ingredients = require("../models/indredients-model");
-const { ctrlWrapper } = require("../helpers");
-const upCaseFirstLetter = require("../helpers/upCaseFirstLetter");
+const Ingredient = require("../models/indredients-model");
 const { Recipe } = require("../models/recipe-model");
+const { ctrlWrapper, upCaseFirstLetter } = require("../helpers");
 
 async function getAll(req, res) {
-  const result = await Ingredients.find({}).sort({ name: "asc" });
+  const result = await Ingredient.find({}).sort({ name: "asc" });
 
   res.json(result);
 }
 
 async function getByName(req, res) {
-  const { ingredients } = req.params;
-  const name = upCaseFirstLetter(ingredients);
-  const ingredient = await Ingredients.findOne({ name });
+  const { query } = req.query;
+  const name = upCaseFirstLetter(query);
+  const ingredients = await Ingredient.find({
+    name: { $regex: name, $options: "i" },
+  });
+  const ingredientsId = ingredients.map((ingredient) => ingredient.id);
 
   const recipes = await Recipe.find({
     ingredients: {
-      $elemMatch: { id: ingredient._id.toHexString() },
+      $elemMatch: { id: { $in: ingredientsId } },
     },
   });
   res.json(recipes);

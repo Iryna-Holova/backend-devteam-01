@@ -45,8 +45,7 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [
         {
-          _id: false,
-          id: {
+          _id: {
             type: String,
             required: [true, "Ingredient is required"],
             ref: "ingredient",
@@ -66,7 +65,7 @@ const recipeSchema = new Schema(
       default: [],
     },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 recipeSchema.post("save", handleMongooseError);

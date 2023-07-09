@@ -1,19 +1,19 @@
 const express = require("express");
-const { isValidBody, isValidId, authenticate } = require("../../middlewares");
-const ownRecipeController = require("../../controllers/ownRecipes-controller");
+const { validateBody, validateId, authenticate } = require("../../middlewares");
+const ctrl = require("../../controllers/ownRecipes-controller");
 const { schemas } = require("../../models/recipe-model");
 
 const router = express.Router();
 
-router.get("/", authenticate, ownRecipeController.getOwn);
+router.get("/", authenticate, ctrl.getOwn);
 
 router.post(
   "/",
   authenticate,
-  isValidBody(schemas.createOwnRecipeSchema),
-  ownRecipeController.create
+  validateBody(schemas.createOwnRecipeSchema),
+  ctrl.create
 );
 
-router.delete("/:id", authenticate, isValidId, ownRecipeController.deleteById);
+router.delete("/:id", authenticate, validateId, ctrl.deleteById);
 
 module.exports = router;

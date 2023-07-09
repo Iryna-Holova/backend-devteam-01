@@ -49,7 +49,7 @@ const userSchema = new Schema(
     },
     shoppingList: { type: [ShoppingListSchema], default: [] },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.post("save", handleMongooseError);
