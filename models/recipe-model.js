@@ -45,7 +45,8 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [
         {
-          _id: {
+          _id: false,
+          id: {
             type: String,
             required: [true, "Ingredient is required"],
             ref: "ingredient",
