@@ -45,8 +45,7 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [
         {
-          _id: false,
-          id: {
+          _id: {
             type: String,
             required: [true, "Ingredient is required"],
             ref: "ingredient",
@@ -79,7 +78,7 @@ const createOwnRecipeSchema = Joi.object({
   ingredients: Joi.array()
     .items(
       Joi.object({
-        id: Joi.string().hex().length(24).required(),
+        _id: Joi.string().hex().length(24).required(),
         measure: Joi.string().required(),
       })
     )
