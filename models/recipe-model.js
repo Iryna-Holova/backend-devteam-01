@@ -58,6 +58,19 @@ const recipeSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "user",
     },
+    favorite: {
+      type: [
+        {
+          _id: false,
+          userId: {
+            type: Schema.Types.ObjectId,
+            ref: "user",
+            required: [true, "User's id is required"],
+          },
+        },
+      ],
+      default: [],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -101,11 +114,16 @@ const getByCategoryBodySchema = Joi.object({
   limit: Joi.number().required(),
 });
 
+const addFavoriteSchema = Joi.object({
+  recipeId: Joi.string().hex().length(24).required(),
+});
+
 const schemas = {
   limitMainPageSchema,
   createOwnRecipeSchema,
   getByCategoryParamsSchema,
   getByCategoryBodySchema,
+  addFavoriteSchema,
 };
 
 module.exports = {
