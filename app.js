@@ -19,12 +19,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/users", authRouter);
-app.use("/recipes/", recipesRouter);
-app.use("/own-recipes", ownRecipeRouter);
-app.use("/shopping-list", shoppingListRouter);
-app.use("/favorite", favoriteRouter);
-app.use("/ingredients", ingredientsRouter);
+app.use("/api/users", authRouter);
+app.use("/api/recipes/", recipesRouter);
+app.use("/api/own-recipes", ownRecipeRouter);
+app.use("/api/shopping-list", shoppingListRouter);
+app.use("/api/favorite", favoriteRouter);
+app.use("/api/ingredients", ingredientsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
