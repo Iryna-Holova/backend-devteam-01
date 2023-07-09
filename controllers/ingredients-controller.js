@@ -9,13 +9,18 @@ async function getAll(req, res) {
 }
 
 async function getByName(req, res) {
-  const { ingredients } = req.params;
-  const name = upCaseFirstLetter(ingredients);
-  const ingredient = await Ingredient.findOne({ name });
+
+  const { query } = req.query;
+  const name = upCaseFirstLetter(query);
+  const ingredients = await Ingredient.find({
+    name: { $regex: name, $options: "i" },
+  });
+  const ingredientsId = ingredients.map((ingredient) => ingredient.id);
+
 
   const recipes = await Recipe.find({
     ingredients: {
-      $elemMatch: { id: ingredient._id.toHexString() },
+      $elemMatch: { id: { $in: ingredientsId } },
     },
   });
   res.json(recipes);
