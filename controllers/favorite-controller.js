@@ -6,7 +6,7 @@ async function getAll(req, res) {
   const { _id } = req.user;
   const ObjectId = mongoose.Types.ObjectId;
   const favoriteRecipes = await Recipe.find({
-    favorite: { $elemMatch: { userId: new ObjectId(_id) } },
+    favorite: { $elemMatch: { _userId: new ObjectId(_id) } },
   });
 
   res.json(favoriteRecipes);
@@ -18,7 +18,7 @@ async function save(req, res) {
 
   const response = await Recipe.findByIdAndUpdate(
     recipeId,
-    { $push: { favorite: { userId } } },
+    { $addToSet: { favorite: { _userId: userId } } },
     {
       new: true,
     }
@@ -27,7 +27,7 @@ async function save(req, res) {
   if (!response) {
     throw HttpError(404, "The recipe not found");
   }
-  console.log(response);
+
   res.json(response);
 }
 
@@ -36,7 +36,7 @@ async function deleteById(req, res) {
   const { id: recipeId } = req.params;
   const response = await Recipe.findOne({
     recipeId,
-    shoppingList: { $elemMatch: { userId } },
+    shoppingList: { $elemMatch: { _userId: userId } },
   });
 
   if (!response) {
@@ -44,7 +44,7 @@ async function deleteById(req, res) {
   }
 
   await Recipe.findByIdAndUpdate(recipeId, {
-    $pull: { favorite: { userId } },
+    $pull: { favorite: { _userId: userId } },
   });
 
   res.json({ message: "The recipe deleted from favorite" });
