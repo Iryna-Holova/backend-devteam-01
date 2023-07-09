@@ -1,9 +1,9 @@
 const { HttpError } = require('../helpers');
 
-const isValidParams = schema => {
+const isValidQuery = schema => {
   const func = (req, res, next) => {
-    if (Object.keys(req.params).length) {
-      const { error } = schema.validate(req.params);
+    if (Object.keys(req.query).length) {
+      const { error } = schema.validate(req.query);
       if (error) {
         next(HttpError(400, `invalid request query: ${error.message}`));
       }
@@ -13,4 +13,4 @@ const isValidParams = schema => {
   return func;
 };
 
-module.exports = isValidParams;
+module.exports = isValidQuery;

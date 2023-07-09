@@ -1,65 +1,68 @@
-const { Schema, model } = require("mongoose");
-const Joi = require("joi");
-const { handleMongooseError } = require("../helpers");
+const { Schema, model } = require('mongoose');
+const Joi = require('joi');
+const { handleMongooseError } = require('../helpers');
 
 const categories = [
-  "Seafood",
-  "Lamb",
-  "Starter",
-  "Chicken",
-  "Beef",
-  "Dessert",
-  "Vegan",
-  "Pork",
-  "Vegetarian",
-  "Miscellaneous",
-  "Pasta",
-  "Breakfast",
-  "Side",
-  "Goat",
-  "Soup",
+  'Seafood',
+  'Lamb',
+  'Starter',
+  'Chicken',
+  'Beef',
+  'Dessert',
+  'Vegan',
+  'Pork',
+  'Vegetarian',
+  'Miscellaneous',
+  'Pasta',
+  'Breakfast',
+  'Side',
+  'Goat',
+  'Soup',
 ];
 
-const recipeSchema = new Schema({
-  title: {
-    type: String,
-    minlength: [2, "Title must contain at least 2 characters"],
-    required: [true, "Title is required"],
-    unique: true,
-    trim: true,
-  },
-  category: {
-    type: String,
-    enum: categories,
-    required: [true, "Category is required"],
-  },
-  area: { type: String },
-  instructions: { type: String, required: [true, "Instruction is required"] },
-  description: { type: String, required: [true, "Description is required"] },
-  thumb: { type: String },
-  preview: { type: String },
-  time: { type: String, required: [true, "Time is required"] },
-  youtube: { type: String },
-  tags: { type: [String] },
-  ingredients: {
-    type: [
-      {
-        id: {
-          type: String,
-          required: [true, "Ingredient is required"],
-          ref: "ingredient",
+const recipeSchema = new Schema(
+  {
+    title: {
+      type: String,
+      minlength: [2, 'Title must contain at least 2 characters'],
+      required: [true, 'Title is required'],
+      unique: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      enum: categories,
+      required: [true, 'Category is required'],
+    },
+    area: { type: String },
+    instructions: { type: String, required: [true, 'Instruction is required'] },
+    description: { type: String, required: [true, 'Description is required'] },
+    thumb: { type: String },
+    preview: { type: String },
+    time: { type: String, required: [true, 'Time is required'] },
+    youtube: { type: String },
+    tags: { type: [String] },
+    ingredients: {
+      type: [
+        {
+          id: {
+            type: String,
+            required: [true, 'Ingredient is required'],
+            ref: 'ingredient',
+          },
+          measure: { type: String, required: [true, 'Measure is required'] },
         },
-        measure: { type: String, required: [true, "Measure is required"] },
-      },
-    ],
+      ],
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
   },
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-  },
-});
+  { versionKey: false }
+);
 
-recipeSchema.post("save", handleMongooseError);
+recipeSchema.post('save', handleMongooseError);
 
 const createOwnRecipeSchema = Joi.object({
   title: Joi.string().min(2).trim().required(),
@@ -82,15 +85,27 @@ const createOwnRecipeSchema = Joi.object({
     .required(),
 });
 
-const Recipe = model("recipe", recipeSchema);
+const Recipe = model('recipe', recipeSchema);
 
 const limitMainPageSchema = Joi.object({
   limit: Joi.number().default(1).valid(1, 2, 4),
 });
 
+const getByCategoryParamsSchema = Joi.object({
+  category: Joi.string()
+    .valid(...categories)
+    .required(),
+});
+
+const getByCategoryBodySchema = Joi.object({
+  limit: Joi.number().required(),
+});
+
 const schemas = {
   limitMainPageSchema,
   createOwnRecipeSchema,
+  getByCategoryParamsSchema,
+  getByCategoryBodySchema,
 };
 
 module.exports = {
