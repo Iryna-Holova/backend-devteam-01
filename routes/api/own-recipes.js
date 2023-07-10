@@ -1,11 +1,21 @@
 const express = require("express");
-const { validateBody, validateId, authenticate } = require("../../middlewares");
+const {
+  validateBody,
+  validateId,
+  authenticate,
+  validateQuery,
+} = require("../../middlewares");
 const ctrl = require("../../controllers/ownRecipes-controller");
 const { schemas } = require("../../models/recipe-model");
 
 const router = express.Router();
 
-router.get("/", authenticate, ctrl.getOwn);
+router.get(
+  "/",
+  validateQuery(schemas.getValidateQueryShema),
+  authenticate,
+  ctrl.getOwn
+);
 
 router.post(
   "/",

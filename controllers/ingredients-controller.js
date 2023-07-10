@@ -9,11 +9,11 @@ async function getAll(req, res) {
 }
 
 async function getByName(req, res) {
-  const { query } = req.query;
+  const { q: ingredient } = req.query;
   const { page = 1, limit = 6 } = req.query;
   const skip = (page - 1) * limit;
 
-  const name = upCaseFirstLetter(query);
+  const name = upCaseFirstLetter(ingredient);
   const ingredients = await Ingredient.find({
     name: { $regex: name, $options: "i" },
   });
@@ -22,8 +22,8 @@ async function getByName(req, res) {
     ingredients: {
       $elemMatch: { id: { $in: ingredientsId } },
     },
-	};
-	
+  };
+
   const [recipes, totalCount] = await Promise.all([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
