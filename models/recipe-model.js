@@ -110,19 +110,21 @@ const getByCategoryParamsSchema = Joi.object({
     .required(),
 });
 
-const getByCategoryBodySchema = Joi.object({
-  limit: Joi.number().default(8).required(),
-});
-
 const addFavoriteSchema = Joi.object({
   recipeId: Joi.string().hex().length(24).required(),
+});
+
+const getValidateQueryShema = Joi.object({
+  limit: Joi.number().min(1),
+  page: Joi.number().min(1),
+  q: Joi.string(),
 });
 
 const schemas = {
   limitMainPageSchema,
   createOwnRecipeSchema,
   getByCategoryParamsSchema,
-  getByCategoryBodySchema,
+  getValidateQueryShema,
   addFavoriteSchema,
 };
 
