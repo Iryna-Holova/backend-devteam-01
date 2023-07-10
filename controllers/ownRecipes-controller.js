@@ -6,7 +6,7 @@ async function getOwn(req, res) {
   const { page = 1, limit = 4 } = req.query;
 
   const skip = (page - 1) * limit;
-  const [recipes, totalCount] = await Promise.all([
+  const [recipes, total] = await Promise.all([
     Recipe.find({ owner }, null, { skip, limit }).populate(
       "owner",
       "name email"
@@ -14,7 +14,7 @@ async function getOwn(req, res) {
     Recipe.countDocuments({ owner }),
   ]);
 
-  res.json({ recipes, totalCount });
+  res.json({ recipes, total });
 }
 
 async function create(req, res) {

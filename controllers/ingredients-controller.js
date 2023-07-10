@@ -12,12 +12,11 @@ async function getByName(req, res) {
   const { q: ingredient } = req.query;
   const { page = 1, limit = 6 } = req.query;
 
-	const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit;
   const name = upCaseFirstLetter(ingredient);
   const ingredients = await Ingredient.find({
     name: { $regex: name, $options: "i" },
-	});
-
+  });
   const ingredientsId = ingredients.map((ingredient) => ingredient.id);
   const searchFilter = {
     ingredients: {
@@ -25,12 +24,12 @@ async function getByName(req, res) {
     },
   };
 
-  const [recipes, totalCount] = await Promise.all([
+  const [recipes, total] = await Promise.all([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);
 
-  res.json({ recipes, totalCount });
+  res.json({ recipes, total });
 }
 
 module.exports = {
