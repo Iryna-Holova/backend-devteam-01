@@ -12,7 +12,7 @@ router.get("/main-page", validateQuery(schemas.limitMainPageSchema), ctrlRecipes
 router.get(
   "/category/:category",
   validateParams(schemas.getByCategoryParamsSchema),
-  validateQuery(schemas.getByCategoryQuerySchema),
+  validateQuery(schemas.getValidateQueryShema),
   ctrlRecipes.getRecipesByCategory
 );
 

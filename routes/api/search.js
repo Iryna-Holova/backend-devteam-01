@@ -6,6 +6,6 @@ const { schemas } = require("../../models/recipe-model");
 
 const router = express.Router();
 
-router.get("/", validateQuery(schemas.getSearchByNameSchema), ctrlRecipes.getSearchByName);
+router.get("/", validateQuery(schemas.getValidateQueryShema), ctrlRecipes.getSearchByName);
 
 module.exports = router;
