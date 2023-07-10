@@ -1,8 +1,10 @@
 const express = require("express");
-const ctrl = require("../../controllers/ingredients-controller");
 const router = express.Router();
+const ctrl = require("../../controllers/ingredients-controller");
+const { validateQuery } = require("../../middlewares");
+const { schemas } = require("../../models/recipe-model");
 
 router.get("/list", ctrl.getAll);
-router.get("/", ctrl.getByName);
+router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
 
 module.exports = router;
