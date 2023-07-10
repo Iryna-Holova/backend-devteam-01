@@ -11,12 +11,13 @@ async function getAll(req, res) {
 async function getByName(req, res) {
   const { q: ingredient } = req.query;
   const { page = 1, limit = 6 } = req.query;
-  const skip = (page - 1) * limit;
 
+	const skip = (page - 1) * limit;
   const name = upCaseFirstLetter(ingredient);
   const ingredients = await Ingredient.find({
     name: { $regex: name, $options: "i" },
-  });
+	});
+	
   const ingredientsId = ingredients.map((ingredient) => ingredient.id);
   const searchFilter = {
     ingredients: {
