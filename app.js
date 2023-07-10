@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const authRouter = require("./routes/api/auth");
 const recipesRouter = require("./routes/api/recipes");
-const ownRecipeRouter = require("./routes/api/ownRecipes");
+const ownRecipeRouter = require("./routes/api/own-recipes");
 const shoppingListRouter = require("./routes/api/shopping-list");
 const favoriteRouter = require("./routes/api/favorite");
 const ingredientsRouter = require("./routes/api/ingredients");
