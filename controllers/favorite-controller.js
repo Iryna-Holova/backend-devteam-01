@@ -36,7 +36,7 @@ async function deleteById(req, res) {
   const { id: recipeId } = req.params;
   const response = await Recipe.findOne({
     recipeId,
-    shoppingList: { $elemMatch: { _userId: userId } },
+    favorite: { $elemMatch: { _userId: userId } },
   });
 
   if (!response) {
