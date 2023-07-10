@@ -3,9 +3,18 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
-  const recipe = await Recipe.find({ owner }).populate("owner", "name email");
+  const { page = 1, limit = 4 } = req.query;
 
-  res.json(recipe);
+  const skip = (page - 1) * limit;
+  const [recipes, totalCount] = await Promise.all([
+    Recipe.find({ owner }, null, { skip, limit }).populate(
+      "owner",
+      "name email"
+    ),
+    Recipe.countDocuments({ owner }),
+  ]);
+
+  res.json({ recipes, totalCount });
 }
 
 async function create(req, res) {
