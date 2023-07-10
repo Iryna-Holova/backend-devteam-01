@@ -5,18 +5,19 @@ const { default: mongoose } = require("mongoose");
 async function getAll(req, res) {
   const { _id } = req.user;
   const { page = 1, limit = 4 } = req.query;
+
   const skip = (page - 1) * limit;
   const ObjectId = mongoose.Types.ObjectId;
+  const searchFilter = {
+    favorite: { $elemMatch: { _userId: new ObjectId(_id) } },
+	};
+	
+  const [recipes, totalCount] = await Promise.all([
+    Recipe.find(searchFilter, null, { skip, limit }),
+    Recipe.countDocuments(searchFilter),
+  ]);
 
-  const favoriteRecipes = await Recipe.find(
-    {
-      favorite: { $elemMatch: { _userId: new ObjectId(_id) } },
-    },
-    null,
-    { skip, limit }
-  );
-
-  res.json(favoriteRecipes);
+  res.json({ recipes, totalCount });
 }
 
 async function save(req, res) {
