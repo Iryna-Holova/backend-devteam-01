@@ -10,14 +10,14 @@ async function getAll(req, res) {
   const ObjectId = mongoose.Types.ObjectId;
   const searchFilter = {
     favorite: { $elemMatch: { _userId: new ObjectId(_id) } },
-	};
-	
-  const [recipes, totalCount] = await Promise.all([
+  };
+
+  const [recipes, total] = await Promise.all([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);
 
-  res.json({ recipes, totalCount });
+  res.json({ recipes, total });
 }
 
 async function save(req, res) {
@@ -44,7 +44,7 @@ async function deleteById(req, res) {
   const { id: recipeId } = req.params;
   const response = await Recipe.findOne({
     recipeId,
-    shoppingList: { $elemMatch: { _userId: userId } },
+    favorite: { $elemMatch: { _userId: userId } },
   });
 
   if (!response) {
