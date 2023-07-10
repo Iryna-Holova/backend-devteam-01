@@ -3,7 +3,13 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
-  const recipe = await Recipe.find({ owner }).populate("owner", "name email");
+  const { page = 1, limit = 4 } = req.query;
+  const skip = (page - 1) * limit;
+
+  const recipe = await Recipe.find({ owner }, null, { skip, limit }).populate(
+    "owner",
+    "name email"
+  );
 
   res.json(recipe);
 }
