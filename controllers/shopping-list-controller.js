@@ -3,7 +3,7 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 
 async function getAll(req, res) {
   const { _id } = req.user;
-  const shoppingList = await User.findById({ _id }).populate(
+  const { shoppingList } = await User.findById({ _id }).populate(
     "shoppingList.ingredientId"
   );
 
