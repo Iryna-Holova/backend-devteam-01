@@ -120,7 +120,7 @@ const addFavoriteSchema = Joi.object({
 });
 
 const getSearchByNameSchema = Joi.object({
-  limit: Joi.number().min(1).default(8),
+  limit: Joi.number().min(1).default(6),
   page: Joi.number().min(1).default(1),
   q: Joi.string().default(""),
 });

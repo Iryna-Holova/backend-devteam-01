@@ -95,7 +95,7 @@ const getRecipeById = async (req, res) => {
 };
 
 const getSearchByName = async (req, res) => {
-  const { limit = 8, q = "", page = 1 } = req.query;
+  const { limit = 6, q = "", page = 1 } = req.query;
   const skip = limit * (page - 1);
 
   const title = q.trim();
