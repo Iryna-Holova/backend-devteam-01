@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const { handleMongooseError } = require("../helpers");
-const { User } = require("./user-model");
+// const { User } = require("./user-model");
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -11,8 +11,9 @@ const subscriptionSchema = new Schema({
         ref: "User",
         required: true,
     },
-    email: {
-        type: String,
+    emails: {
+        type: [String],
+        default: [],
         trim: true,
         lowercase: true,
         match: [emailRegexp, "Invalid email"],
