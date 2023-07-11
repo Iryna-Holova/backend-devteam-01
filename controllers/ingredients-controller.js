@@ -28,8 +28,9 @@ async function getByName(req, res) {
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);
+  const pages = Math.ceil(total / limit);
 
-  res.json({ recipes, total });
+  res.json({ total, pages, recipes });
 }
 
 module.exports = {

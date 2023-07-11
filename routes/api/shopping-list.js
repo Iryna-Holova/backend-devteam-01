@@ -39,6 +39,38 @@ router.post(
   shoppingListController.create
 );
 
+/**
+ * @swagger
+ * /api/shopping-list:
+ *   post:
+ *     summary: Add an ingredient to shopping list
+ *     security:
+ *       - Authorization: []
+ *     tags: [Shopping list]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ShoppingListRequest'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The Ingredient added to shopping list
+ *                   description: A recipe added succesfully
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
 router.delete(
   "/:id",
   authenticate,
