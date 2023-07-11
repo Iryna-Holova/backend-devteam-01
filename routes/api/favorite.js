@@ -29,13 +29,13 @@ router.get(
  *       - in: query
  *         name: page
  *         schema:
- *           type: number
+ *           type: string
  *         required: false
  *         description: Page of favorite's array
  *       - in: query
  *         name: limit
  *         schema:
- *           type: number
+ *           type: string
  *         required: false
  *         description: Items per page
  *     responses:

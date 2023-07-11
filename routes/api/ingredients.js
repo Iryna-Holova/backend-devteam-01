@@ -44,6 +44,18 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *           type: string
  *         required: true
  *         description: A ingredient name
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Page of recipes' array
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Items per page
  *     responses:
  *       200:
  *         description: OK

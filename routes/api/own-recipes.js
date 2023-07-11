@@ -29,13 +29,13 @@ router.get(
  *       - in: query
  *         name: page
  *         schema:
- *           type: number
+ *           type: string
  *         required: false
  *         description: Page of own recipes array
  *       - in: query
  *         name: limit
  *         schema:
- *           type: number
+ *           type: string
  *         required: false
  *         description: Items per page
  *     responses:
@@ -49,6 +49,7 @@ router.get(
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
+ *                   description: An array of own recipes
  *                 total:
  *                   example: 1
  *                   description: The total number of recipes
@@ -108,7 +109,6 @@ router.post(
  *         description: Internal Server Error
  */
 
-
 router.delete("/:id", authenticate, validateId, ctrl.deleteById);
 
 /**
@@ -152,6 +152,5 @@ router.delete("/:id", authenticate, validateId, ctrl.deleteById);
  *               $ref: '#/components/schemas/500'
  *         description: Internal Server Error
  */
-
 
 module.exports = router;
