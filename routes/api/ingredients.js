@@ -43,7 +43,7 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *         schema:
  *           type: string
  *         required: true
- *         description: A ingredient name
+ *         description: A ingredient name. If ingredient has to words - search as 'meat-bowls'
  *       - in: query
  *         name: page
  *         schema:

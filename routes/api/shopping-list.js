@@ -7,6 +7,31 @@ const router = express.Router();
 
 router.get("/", authenticate, shoppingListController.getAll);
 
+/**
+ * @swagger
+ * /api/shoppping-list:
+ *   get:
+ *     summary: Get all ingredients from shopping list
+ *     security:
+ *       - Authorization: []
+ *     tags: [Shopping list]
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ShoppingListResponse'
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
 router.post(
   "/",
   authenticate,
@@ -20,5 +45,47 @@ router.delete(
   validateId,
   shoppingListController.deleteById
 );
+
+/**
+ * @swagger
+ * /api/shopping-list:
+ *   delete:
+ *     summary: Delete an ingredient from shopping list
+ *     security:
+ *       - Authorization: []
+ *     tags: [Shopping list]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: An ingredient's id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient deleted
+ *                   description: An ingredient deleted succesfully from shopping list
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient in a user's list not found
+ *                   description: Not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
 
 module.exports = router;
