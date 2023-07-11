@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/category-list", ctrlCategories.getAllCategories);
 router.get("/main-page", validateQuery(schemas.limitMainPageSchema), ctrlRecipes.getMainPage);
 router.get(
-  "/category/:category",
+  "/categories/:category",
   validateParams(schemas.getByCategoryParamsSchema),
   validateQuery(schemas.getValidateQueryShema),
   ctrlRecipes.getRecipesByCategory
