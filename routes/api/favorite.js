@@ -21,7 +21,7 @@ router.get(
  * @swagger
  * /api/favorite:
  *   get:
- *     summary: get all favorite recipes
+ *     summary: Get all favorite recipes
  *     security:
  *       - Authorization: []
  *     tags: [Recipes]
@@ -74,7 +74,7 @@ router.post(
  * @swagger
  * /api/favorite:
  *   post:
- *     summary: add a recipe to favorite
+ *     summary: Add a recipe to favorite
  *     security:
  *       - Authorization: []
  *     tags: [Recipes]
@@ -111,7 +111,7 @@ router.delete("/:id", authenticate, validateId, favoriteController.deleteById);
  * @swagger
  * /api/favorite:
  *   delete:
- *     summary: delete a recipe from favorite
+ *     summary: Delete a recipe from favorite
  *     security:
  *       - Authorization: []
  *     tags: [Recipes]

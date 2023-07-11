@@ -10,7 +10,7 @@ router.get("/list", ctrl.getAll);
  * @swagger
  * /api/ingredients/list:
  *   get:
- *     summary: get all ingredients
+ *     summary: Get all ingredients
  *     tags: [Ingredients]
  *     responses:
  *       200:
@@ -35,7 +35,7 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  * @swagger
  * /api/ingredients?q=ingredient:
  *   get:
- *     summary: get a recipe by the ingredient name
+ *     summary: Get a recipe by the ingredient name
  *     tags: [Ingredients]
  *     parameters:
  *       - in: query

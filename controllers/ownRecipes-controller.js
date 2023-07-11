@@ -21,9 +21,15 @@ async function create(req, res) {
   const { body } = req;
   const { _id: owner } = req.user;
 
-  const recipe = await Recipe.create({ ...body, owner });
+  const recipe = await Recipe.findOne({ title: body.title });
 
-  res.status(201).json(recipe);
+  if (recipe) {
+    throw HttpError(400, "The name of the recipe in use");
+  }
+
+  const newRecipe = await Recipe.create({ ...body, owner });
+
+  res.status(201).json(newRecipe);
 }
 
 async function deleteById(req, res) {
