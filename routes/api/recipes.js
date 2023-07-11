@@ -79,15 +79,73 @@ router.get(
  */
 
 router.get(
-  "/category/:category",
+  "/categories/:category",
   validateParams(schemas.getByCategoryParamsSchema),
   validateQuery(schemas.getValidateQueryShema),
   ctrlRecipes.getRecipesByCategory
 );
 
-
-
-
+/**
+ * @swagger
+ * /api/recipes/categories/{category}:
+ *   get:
+ *     summary: Get a recipe by the ingredient name
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: path
+ *         name: category
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Category name
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Page of recipes' array
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 total:
+ *                   example: 1
+ *                   description: The total number of recipes
+ *                 pages:
+ *                   example: 1
+ *                   description: The total amount of pages of recipes
+ *                 recipes:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/RecipeResponse'
+ *               definitions:
+ *                 recipes:
+ *                   $ref: '#/components/schemas/RecipeResponse'
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: No recipe found by category
+ *                   description: Not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
 
 router.get("/:id", validateId, ctrlRecipes.getRecipeById);
 
@@ -110,9 +168,16 @@ router.get("/:id", validateId, ctrlRecipes.getRecipeById);
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/RecipeResponse'
+ *               $ref: '#/components/schemas/RecipeResponse'
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: No recipe found by id
+ *                   description: Not found
  *       500:
  *         content:
  *           application/json:
