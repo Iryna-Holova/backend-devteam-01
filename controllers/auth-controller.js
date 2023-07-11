@@ -8,14 +8,18 @@ const { uid } = require("uid");
 
 const { User } = require("../models/user-model");
 
-const { ctrlWrapper, HttpError, sendEmail, cloudinary } = require("../helpers");
+const { ctrlWrapper, HttpError, sendEmail, createVerifyEmail, cloudinary } = require("../helpers");
 
-const { SECRET_KEY, BASE_URL } = process.env;
+const { SECRET_KEY } = process.env;
+
+let registrationBaseURL;
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (user) {
+  const { baseURL, user } = req.body;
+  const { name, email, password } = user;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
     throw HttpError(409, "Email in use");
   }
 
@@ -24,28 +28,24 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
   const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
 
+  registrationBaseURL = baseURL;
 
-  const newUser = await User.create({
-    ...req.body,
+  await User.create({
+    name,
+    email,
     password: hashPassword,
     avatarURL: normalizedAvatarUrl,
     verificationToken,
   });
 
-  const verifyEmail = {
-    to: email,
-    subject: "Email verification",
-    html: `<a target="_blank" href="${BASE_URL}users/verify/${verificationToken}">Click to verify email</a>`,
-  };
+  const verifyEmail = createVerifyEmail(email, registrationBaseURL, verificationToken);
+
+  const verificationLink = `${baseURL}/users/verify/${verificationToken}`;
 
   await sendEmail(verifyEmail);
 
-  res.json({
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-      avatarURL: normalizedAvatarUrl,
-    },
+  res.status(201).json({
+    verificationLink
   });
 };
 
@@ -57,18 +57,25 @@ const verify = async (req, res) => {
     throw HttpError(404, "User not found");
   }
 
+  const payload = { id: user.id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+
   await User.findByIdAndUpdate(user._id, {
+    token,
     verify: true,
     verificationToken: null,
   });
 
   res.json({
-    message: "Verification successful",
+    token,
+    user
   });
 };
 
 const resendVerify = async (req, res) => {
+  // const { user } = req.body;
   const { email } = req.body;
+
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -87,14 +94,16 @@ const resendVerify = async (req, res) => {
     await user.save();
   }
 
-  const verifyEmail = {
-    to: email,
-    subject: "Email verification",
-    html: `<a target="_blank" href="${BASE_URL}users/verify/${user.verificationToken}">Click to verify email</a>`,
-  };
+  const verifyEmail = createVerifyEmail(email, registrationBaseURL, verificationToken);
+
+  const payload = { id: user.id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
 
   await sendEmail(verifyEmail);
-  res.json({ message: "Verification email sent" });
+  res.json({
+    token,
+    user
+  });
 };
 
 const login = async (req, res) => {
@@ -111,11 +120,11 @@ const login = async (req, res) => {
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
   }
-
+  // using on verification
   const payload = { id: user.id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
-
+  //
   res.json({
     token,
     user: {

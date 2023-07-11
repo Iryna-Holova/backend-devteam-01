@@ -4,6 +4,7 @@ const handleMongooseError = require("./handle-mongoose-error");
 const HttpError = require("./http-error");
 const sendEmail = require("./send-email");
 const upCaseFirstLetter = require("./up-case-first-letter");
+const createVerifyEmail = require("./verify-email");
 
 module.exports = {
   cloudinary,
@@ -12,4 +13,5 @@ module.exports = {
   HttpError,
   sendEmail,
   upCaseFirstLetter,
+  createVerifyEmail,
 };
