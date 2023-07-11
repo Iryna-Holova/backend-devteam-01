@@ -76,15 +76,16 @@ const getRecipesByCategory = async (req, res) => {
 const getRecipeById = async (req, res) => {
   const { id } = req.params;
 
-  const response = await Recipe.findById(id).populate("ingredients._id");
+  const response = await Recipe.findById(id).populate("ingredients.id");
 
   if (response) {
     const obj = { ...response._doc };
     obj.ingredients = [
       ...response.ingredients.map(item => {
-        const { _id, img, name, desc } = item._id;
-
-        const tmp = { _id, name, desc, img, mesure: item.measure };
+        const { id, img, name, desc } = item.id;
+        //const { _id, img, name, desc } = item.id;
+        const tmp = { id, name, desc, img, mesure: item.measure };
+        //const tmp = { _id, name, desc, img, mesure: item.measure };
 
         return tmp;
       }),
