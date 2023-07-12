@@ -1,5 +1,5 @@
 const createVerifyEmail = (email, baseURL, verificationToken) => {
-    let verifyLink = `${baseURL}/users/verify/${verificationToken}`;
+    let verifyLink = `${baseURL}/verify/${verificationToken}`;
 
     const verifyEmail = {
         to: email,

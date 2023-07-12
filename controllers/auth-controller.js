@@ -40,13 +40,9 @@ const register = async (req, res) => {
 
   const verifyEmail = createVerifyEmail(email, registrationBaseURL, verificationToken);
 
-  const verificationLink = `${baseURL}/users/verify/${verificationToken}`;
-
   await sendEmail(verifyEmail);
 
-  res.status(201).json({
-    verificationLink
-  });
+  res.status(201).json();
 };
 
 const verify = async (req, res) => {
