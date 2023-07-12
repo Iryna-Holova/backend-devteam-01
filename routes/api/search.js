@@ -43,21 +43,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 total:
- *                   example: 1
- *                   description: The total number of recipes
- *                 pages:
- *                   example: 1
- *                   description: The total amount of pages of recipes
- *                 recipes:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/RecipeResponse'
- *                   description: An array of recipes
- *               definitions:
- *                 recipes:
- *                   $ref: '#/components/schemas/RecipeResponse'
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
  *       404:
  *         description: Not found
  *         content:

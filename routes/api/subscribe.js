@@ -21,6 +21,7 @@ router.post("/subscribe", authenticate, validateBody(schemas.emailSchema), ctrl.
  *           schema:
  *               properties:
  *                 email:
+ *                   type: string
  *                   example: johnsmith@gmail.com
  *                   description: User's email
  *     responses:

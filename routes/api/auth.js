@@ -93,6 +93,7 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *           schema:
  *             properties:
  *               email:
+ *                 type: string
  *                 example: johnsmith@gmail.com
  *                 description: User's email
  *     responses:

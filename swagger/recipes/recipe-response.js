@@ -77,7 +77,7 @@
  *         createdAt:
  *           type: date
  *           description: The time of recipe creation
- *         updateddAt:
+ *         updatedAt:
  *           type: date
  *           description: The time of recipe last updation
  *       example:
