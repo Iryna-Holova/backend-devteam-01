@@ -4,7 +4,7 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
   const { page = 1, limit = 4 } = req.query;
-  console.log(page, limit);
+  
   const skip = (page - 1) * limit;
   const [recipes, total] = await Promise.all([
     Recipe.find({ owner }, null, { skip, limit }).populate(
