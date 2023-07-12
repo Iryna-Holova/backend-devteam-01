@@ -45,13 +45,16 @@ router.get(
  *           application/json:
  *             schema:
  *               properties:
+ *                 total:
+ *                   example: 1
+ *                   description: The total number of recipes
+ *                 pages:
+ *                   example: 1
+ *                   description: The amount of pages based on limit query
  *                 recipes:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
- *                 total:
- *                   example: 1
- *                   description: The total number of recipes
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'

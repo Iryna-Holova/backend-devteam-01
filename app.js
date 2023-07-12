@@ -34,6 +34,9 @@ app.use("/api/ingredients", ingredientsRouter);
 app.use("/subscriptions", subscribeRouter);
 app.use("/api/search", searchRouter);
 
+
+const { BASE_URL } = process.env
+
 const options = {
   definition: {
     openapi: "3.1.0",
@@ -59,7 +62,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: BASE_URL,
       },
     ],
   },
