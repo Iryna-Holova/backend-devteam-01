@@ -31,7 +31,7 @@ router.get(
  *         schema:
  *           type: string
  *         required: false
- *         description: Page of favorite's array
+ *         description: Page of favorite recipes
  *       - in: query
  *         name: limit
  *         schema:
@@ -55,6 +55,7 @@ router.get(
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
+ *                   description: An array of favorite recipes
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'
@@ -87,9 +88,9 @@ router.post(
  *         application/json:
  *           schema:
  *             properties:
- *               email:
- *                 example: johnsmith@gmail.com
- *                 description: User's email
+ *               recipeId:
+ *                 example: 6462a8f74c3d0ddd28897fb8
+ *                 description: A recipe id
  *     responses:
  *       200:
  *         description: OK
@@ -99,7 +100,14 @@ router.post(
  *               properties:
  *                 message:
  *                   example: The recipe added succesfully
- *                   description: Added succesfully
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
  *       500:
  *         content:
  *           application/json:
@@ -134,7 +142,6 @@ router.delete("/:id", authenticate, validateId, favoriteController.deleteById);
  *               properties:
  *                 message:
  *                   example: The recipe deleted from favorite
- *                   description: A recipe deleted succesfully
  *       404:
  *         description: Not found
  *         content:
@@ -143,7 +150,6 @@ router.delete("/:id", authenticate, validateId, favoriteController.deleteById);
  *               properties:
  *                 message:
  *                   example: The recipe not found
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:

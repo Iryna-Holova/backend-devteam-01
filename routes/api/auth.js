@@ -36,14 +36,12 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
  *               properties:
  *                 message:
  *                   example: Email in use
- *                   description: Conflict
  *       500:
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/500'
  *         description: Internal Server Error
- *
  */
 
 router.get("/verify/:verificationToken", ctrl.verify);
@@ -63,7 +61,6 @@ router.get("/verify/:verificationToken", ctrl.verify);
  *               properties:
  *                 message:
  *                   example: Verification successful
- *                   description: Verification
  *       404:
  *         description: Not found
  *         content:
@@ -72,7 +69,6 @@ router.get("/verify/:verificationToken", ctrl.verify);
  *               properties:
  *                 message:
  *                   example: User not found
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:
@@ -108,7 +104,6 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *               properties:
  *                 message:
  *                   example: Verification email sent
- *                   description: Verification
  *       400:
  *         description: Bad request
  *         content:
@@ -117,7 +112,14 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *               properties:
  *                 message:
  *                   example: Verification has already been passed
- *                   description: Bad request
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: User not found
  *       500:
  *         content:
  *           application/json:
@@ -158,7 +160,6 @@ router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
  *                   example:
  *                     - Email or password is wrong or Email is not verified
  *                     - Email is not verified
- *                   description: Unauthorized
  *       500:
  *         content:
  *           application/json:
@@ -213,7 +214,6 @@ router.get("/current", authenticate, ctrl.getCurrent);
  *               properties:
  *                 message:
  *                   example: User not found
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:
@@ -237,6 +237,8 @@ router.patch(
  *     security:
  *       - Authorization: []
  *     tags: [Users]
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
@@ -258,7 +260,6 @@ router.patch(
  *               properties:
  *                 message:
  *                   example: No file uploaded
- *                   description: Bad request
  *       500:
  *         content:
  *           application/json:

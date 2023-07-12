@@ -9,12 +9,9 @@
  *         - password
  *       properties:
  *         email:
- *           type: string
+ *           example: johnsmith@gmail.com
  *           description: User's email
  *         password:
- *           type: string
+ *           example: '123456789'
  *           description: User's password
- *       example:
- *            email: johnsmith@gmail.com
- *            password: '123456789'
  */

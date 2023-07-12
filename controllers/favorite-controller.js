@@ -25,7 +25,7 @@ async function save(req, res) {
   const { _id: userId } = req.user;
   const { recipeId } = req.body;
 
-  const { favorite } = await Recipe.findByIdAndUpdate(
+  const recipe = await Recipe.findByIdAndUpdate(
     recipeId,
     { $addToSet: { favorite: { _userId: userId } } },
     {
@@ -33,7 +33,7 @@ async function save(req, res) {
     }
   );
 
-  if (!favorite) {
+  if (!recipe?.favorite) {
     throw HttpError(404, "The recipe not found");
   }
 

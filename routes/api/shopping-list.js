@@ -24,6 +24,7 @@ router.get("/", authenticate, shoppingListController.getAll);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/ShoppingListResponse'
+ *               description: An array of ingredients from shopping list
  *       500:
  *         content:
  *           application/json:
@@ -62,7 +63,6 @@ router.post(
  *               properties:
  *                 message:
  *                   example: The Ingredient added to shopping list
- *                   description: A recipe added succesfully
  *       500:
  *         content:
  *           application/json:
@@ -102,7 +102,6 @@ router.delete(
  *               properties:
  *                 message:
  *                   example: The ingredient deleted
- *                   description: An ingredient deleted succesfully from shopping list
  *       404:
  *         description: Not found
  *         content:
@@ -111,7 +110,6 @@ router.delete(
  *               properties:
  *                 message:
  *                   example: The ingredient in a user's list not found
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:

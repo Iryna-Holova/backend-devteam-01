@@ -21,6 +21,7 @@ router.get("/list", ctrl.getAll);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/IngredientResponse'
+ *               description: An array of ingredients
  *       500:
  *         content:
  *           application/json:
@@ -73,6 +74,7 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
+ *                   description: An array of recipes
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'

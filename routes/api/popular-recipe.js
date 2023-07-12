@@ -20,6 +20,7 @@ router.get("/", popularRecipeController.getAll);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/RecipeResponse'
+ *               description: An array of popular recipes
  *       500:
  *         content:
  *           application/json:

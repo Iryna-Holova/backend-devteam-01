@@ -32,7 +32,6 @@ router.post("/subscribe", authenticate, validateBody(schemas.emailSchema), ctrl.
  *               properties:
  *                 message:
  *                   example: Subscription email sent successfully
- *                   description: Subscribeb succesfully
  *       400:
  *         description: Bad request
  *         content:
@@ -41,7 +40,6 @@ router.post("/subscribe", authenticate, validateBody(schemas.emailSchema), ctrl.
  *               properties:
  *                 message:
  *                   example: This email is already subscribed to the newsletter
- *                   description: Bad request
  *       500:
  *         content:
  *           application/json:

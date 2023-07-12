@@ -21,9 +21,8 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const verificationToken = uid();
-  const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
-  const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
-
+  const avatarURL = gravatar.url(email, { s: "200", r: "pg", d: "identicon" });
+  const normalizedAvatarUrl = avatarURL.replace(/^\/\//, "https://");
 
   const newUser = await User.create({
     ...req.body,
@@ -154,7 +153,7 @@ const getCurrent = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   const { _id } = req.user;
   const { name } = req.body;
-
+  console.log(name);
   let updatedUser = {};
 
   if (name) {
@@ -169,7 +168,7 @@ const updateUserProfile = async (req, res) => {
     }
 
     const fileData = await cloudinary.uploader.upload(tempFilePath, {
-      folder: "avatars"
+      folder: "avatars",
     });
 
     await fs.unlink(tempFilePath);
@@ -180,7 +179,10 @@ const updateUserProfile = async (req, res) => {
     const processedAvatarPath = `temp/${_id}_avatar.jpg`;
     await image.writeAsync(processedAvatarPath);
 
-    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace("image/", ".")}`;
+    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace(
+      "image/",
+      "."
+    )}`;
     const avatarPath = `public/avatars/${uniqueFilename}`;
     await fs.rename(processedAvatarPath, avatarPath);
 

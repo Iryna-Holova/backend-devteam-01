@@ -59,15 +59,6 @@ router.get(
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: The name of the recipe in use
- *                   description: Bad request
  *       500:
  *         content:
  *           application/json:
@@ -104,6 +95,14 @@ router.post(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/RecipeResponse'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The name of the recipe in use
  *       500:
  *         content:
  *           application/json:
@@ -128,7 +127,7 @@ router.delete("/:id", authenticate, validateId, ctrl.deleteById);
  *         schema:
  *           type: string
  *         required: true
- *         description: A recipe's id
+ *         description: A recipe id
  *     responses:
  *       200:
  *         description: OK
@@ -138,7 +137,6 @@ router.delete("/:id", authenticate, validateId, ctrl.deleteById);
  *               properties:
  *                 message:
  *                   example: The recipe deleted
- *                   description: A recipe deleted succesfully
  *       404:
  *         description: Not found
  *         content:
@@ -147,7 +145,6 @@ router.delete("/:id", authenticate, validateId, ctrl.deleteById);
  *               properties:
  *                 message:
  *                   example: The recipe not found
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:

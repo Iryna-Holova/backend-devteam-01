@@ -28,6 +28,7 @@ router.get("/category-list", ctrlCategories.getAllCategories);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/CategoryResponse'
+ *               description: An array of categories
  *       500:
  *         content:
  *           application/json:
@@ -127,6 +128,7 @@ router.get(
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
+ *                   description: An array of recipes
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'
@@ -137,8 +139,7 @@ router.get(
  *             schema:
  *               properties:
  *                 message:
- *                   example: No recipe found by category
- *                   description: Not found
+ *                   example: No recipe found in the category
  *       500:
  *         content:
  *           application/json:
@@ -176,8 +177,7 @@ router.get("/:id", validateId, ctrlRecipes.getRecipeById);
  *             schema:
  *               properties:
  *                 message:
- *                   example: No recipe found by id
- *                   description: Not found
+ *                   example: No recipe found with id
  *       500:
  *         content:
  *           application/json:

@@ -30,7 +30,7 @@ router.get(
  *         schema:
  *           type: string
  *         required: false
- *         description: Page of recipes' array
+ *         description: Page of recipes
  *       - in: query
  *         name: limit
  *         schema:
@@ -54,6 +54,7 @@ router.get(
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/RecipeResponse'
+ *                   description: An array of recipes
  *               definitions:
  *                 recipes:
  *                   $ref: '#/components/schemas/RecipeResponse'
@@ -65,7 +66,6 @@ router.get(
  *               properties:
  *                 message:
  *                   example: No recipes found by the title
- *                   description: Not found
  *       500:
  *         content:
  *           application/json:
