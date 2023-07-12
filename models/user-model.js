@@ -50,9 +50,12 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().min(2).required(),
-  password: Joi.string().min(6).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
+  baseURL: Joi.string().required(),
+  user: Joi.object({
+    name: Joi.string().min(2).required(),
+    email: Joi.string().pattern(emailRegexp).required(),
+    password: Joi.string().min(6).required(),
+  }).required(),
 });
 
 const emailSchema = Joi.object({
@@ -64,15 +67,10 @@ const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
 });
 
-// const updateSubscriptionSchema = Joi.object({
-//   subscription: Joi.string().valid("starter", "pro", "business").required(),
-// });
-
 const schemas = {
   registerSchema,
   emailSchema,
   loginSchema,
-  // updateSubscriptionSchema,
 };
 
 const User = model("user", userSchema);

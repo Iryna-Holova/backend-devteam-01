@@ -44,13 +44,13 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *         schema:
  *           type: string
  *         required: true
- *         description: A ingredient name. If ingredient has to words - search as 'meat-bowls'
+ *         description: An ingredient name. If ingredient has to words - search as 'meat-bowls'
  *       - in: query
  *         name: page
  *         schema:
  *           type: string
  *         required: false
- *         description: Page of recipes' array
+ *         description: Page of recipes
  *       - in: query
  *         name: limit
  *         schema:

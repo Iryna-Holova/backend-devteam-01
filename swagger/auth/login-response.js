@@ -8,16 +8,20 @@
  *         - token
  *         - email
  *         - avatarURL
+ *         - user
  *       properties:
  *         token:
  *           type: string
  *           description: User's token
- *         email:
- *           type: string
- *           description: User's email
- *         avatarURL:
- *           type: string
- *           description: User's avatar
+ *         user:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               description: User's email
+ *             avatarURL:
+ *               type: string
+ *               description: User's avatar
  *       example:
  *            token: Johm Smith
  *            user:

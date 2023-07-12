@@ -8,16 +8,21 @@
  *         - name
  *         - email
  *         - avatarURL
+ *         - user
  *       properties:
- *         name:
- *           type: string
- *           description: User's name
- *         email:
- *           type: string
- *           description: User's email
- *         avatarURL:
- *           type: string
- *           description: User's avatar
+ *         user:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: User's name
+ *             email:
+ *               type: string
+ *               description: User's email
+ *             avatarURL:
+ *               type: string
+ *               description: User's avatar
+ *           description: Registration  response
  *       example:
  *          user:
  *            name: Johm Smith

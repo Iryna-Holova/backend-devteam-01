@@ -158,7 +158,7 @@ router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
  *               properties:
  *                 message:
  *                   example:
- *                     - Email or password is wrong or Email is not verified
+ *                     - Email or password is wrong
  *                     - Email is not verified
  *       500:
  *         content:

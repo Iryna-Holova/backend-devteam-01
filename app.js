@@ -3,6 +3,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const swaggerOptions = require("./helpers/swagger-option");
 require("dotenv").config();
 
 const authRouter = require("./routes/api/auth");
@@ -34,42 +35,7 @@ app.use("/api/ingredients", ingredientsRouter);
 app.use("/subscriptions", subscribeRouter);
 app.use("/api/search", searchRouter);
 
-
-const { BASE_URL } = process.env
-
-const options = {
-  definition: {
-    openapi: "3.1.0",
-    info: {
-      title: "So-Yummi application is built from Express API with Swagger",
-      version: "0.1.0",
-      description:
-        "This is a simple CRUD API application made with Express and documented with Swagger",
-      license: {
-        name: "MIT",
-        url: "https://spdx.org/licenses/MIT.html",
-      },
-    },
-    components: {
-      securitySchemes: {
-        Authorization: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-          value: "Bearer <JWT token here>",
-        },
-      },
-    },
-    servers: [
-      {
-        url: BASE_URL,
-      },
-    ],
-  },
-  apis: ["./routes/api/*.js", "./swagger/**/*.js"],
-};
-
-const specs = swaggerJsdoc(options);
+const specs = swaggerJsdoc(swaggerOptions);
 app.use(
   "/api-docs",
   swaggerUi.serve,
