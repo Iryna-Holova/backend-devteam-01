@@ -4,7 +4,7 @@ const { ctrlWrapper, HttpError } = require("../helpers");
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
   const { page = 1, limit = 4 } = req.query;
-
+  console.log(page, limit);
   const skip = (page - 1) * limit;
   const [recipes, total] = await Promise.all([
     Recipe.find({ owner }, null, { skip, limit }).populate(
@@ -13,17 +13,24 @@ async function getOwn(req, res) {
     ),
     Recipe.countDocuments({ owner }),
   ]);
+  const pages = Math.ceil(total / limit);
 
-  res.json({ recipes, total });
+  res.json({ total, pages, recipes });
 }
 
 async function create(req, res) {
   const { body } = req;
   const { _id: owner } = req.user;
 
-  const recipe = await Recipe.create({ ...body, owner });
+  const recipe = await Recipe.findOne({ title: body.title });
 
-  res.status(201).json(recipe);
+  if (recipe) {
+    throw HttpError(400, "The name of the recipe in use");
+  }
+
+  const newRecipe = await Recipe.create({ ...body, owner });
+
+  res.status(201).json(newRecipe);
 }
 
 async function deleteById(req, res) {

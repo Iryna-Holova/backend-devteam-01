@@ -174,7 +174,7 @@ const updateUserProfile = async (req, res) => {
     }
 
     const fileData = await cloudinary.uploader.upload(tempFilePath, {
-      folder: "avatars"
+      folder: "avatars",
     });
 
     await fs.unlink(tempFilePath);
@@ -185,7 +185,10 @@ const updateUserProfile = async (req, res) => {
     const processedAvatarPath = `temp/${_id}_avatar.jpg`;
     await image.writeAsync(processedAvatarPath);
 
-    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace("image/", ".")}`;
+    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace(
+      "image/",
+      "."
+    )}`;
     const avatarPath = `public/avatars/${uniqueFilename}`;
     await fs.rename(processedAvatarPath, avatarPath);
 

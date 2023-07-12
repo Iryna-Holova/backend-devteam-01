@@ -11,18 +11,18 @@ async function getAll(req, res) {
 }
 
 async function create(req, res) {
-  const { _id } = req.user;
+  const { _id: userId } = req.user;
   const { body } = req;
 
-  const response = await User.findByIdAndUpdate(
-    _id,
+  await User.findByIdAndUpdate(
+    userId,
     { $push: { shoppingList: { ...body } } },
     {
       new: true,
     }
   );
 
-  res.json(response);
+  res.json({ message: "The Ingredient added to shopping list" });
 }
 
 async function deleteById(req, res) {

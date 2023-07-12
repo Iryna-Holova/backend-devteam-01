@@ -61,7 +61,10 @@ const getRecipesByCategory = async (req, res) => {
 
   const skip = limit * (page - 1);
 
-  const response = await Recipe.find({ category }).sort({ _id: -1 }).skip(skip).limit(limit);
+  const response = await Recipe.find({ category })
+    .sort({ _id: -1 })
+    .skip(skip)
+    .limit(limit);
 
   if (response.length > 0) {
     const total = await Recipe.where({ category }).countDocuments();
@@ -81,7 +84,7 @@ const getRecipeById = async (req, res) => {
   if (response) {
     const obj = { ...response._doc };
     obj.ingredients = [
-      ...response.ingredients.map(item => {
+      ...response.ingredients.map((item) => {
         const { id, img, name, desc } = item.id;
         //const { _id, img, name, desc } = item.id;
         const tmp = { id, name, desc, img, mesure: item.measure };
@@ -101,7 +104,9 @@ const getSearchByName = async (req, res) => {
 
   const title = q.trim();
 
-  const response = await Recipe.find({ title: { $regex: title, $options: "i" } })
+  const response = await Recipe.find({
+    title: { $regex: title, $options: "i" },
+  })
     .sort({ _id: -1 })
     .skip(skip)
     .limit(limit);
