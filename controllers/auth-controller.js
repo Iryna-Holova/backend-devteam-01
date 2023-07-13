@@ -1,4 +1,3 @@
-const path = require("path");
 const fs = require("fs/promises");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -28,7 +27,7 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
   const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
 
-  registrationBaseURL = baseURL;
+  registrationBaseURL = `${baseURL}/users`;
 
   await User.create({
     name,
@@ -42,7 +41,7 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.status(201).json();
+  res.status(204).end();
 };
 
 const verify = async (req, res) => {
