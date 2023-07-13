@@ -44,21 +44,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 total:
- *                   example: 1
- *                   description: The total number of recipes
- *                 pages:
- *                   example: 1
- *                   description: The amount of pages based on limit query
- *                 recipes:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/RecipeResponse'
- *                   description: An array of favorite recipes
- *               definitions:
- *                 recipes:
- *                   $ref: '#/components/schemas/RecipeResponse'
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
  *       500:
  *         content:
  *           application/json:
@@ -87,9 +73,12 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
+ *             required:
+ *               - recipeId
  *             properties:
  *               recipeId:
  *                 example: 6462a8f74c3d0ddd28897fb8
+ *                 type: string
  *                 description: A recipe id
  *     responses:
  *       200:

@@ -5,16 +5,25 @@
  *     RegisterRequest:
  *       type: object
  *       required:
- *         - email
- *         - password
+ *         - baseURL
+ *         - user
  *       properties:
- *         name:
- *           example: Johm Smith
- *           description: User's name
- *         email:
- *           example: johnsmith@gmail.com
- *           description: User's email
- *         password:
- *           example: '123456789'
- *           description: User's password
+ *         baseURL:
+ *           type: string
+ *           description: front-end's base url
+ *         user:
+ *           type: object
+ *           properties:
+ *             name:
+ *               example: Johm Smith
+ *               type: string
+ *               description: User's name
+ *             email:
+ *               example: johnsmith@gmail.com
+ *               type: string
+ *               description: User's email
+ *             password:
+ *               example: '123456789'
+ *               type: string
+ *               description: User's password
  */

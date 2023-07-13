@@ -5,81 +5,34 @@
  *     RecipeResponse:
  *       type: object
  *       required:
- *         - title
- *         - category
- *         - area
- *         - instructions
- *         - description
- *         - thumb
- *         - preview
- *         - time
- *         - youtube
- *         - tags
- *         - ingredients
- *         - owner
  *         - _id
  *         - favorite
  *         - createdAt
  *         - updatedAt
- *       properties:
- *         title:
- *           type: string
- *           description: The title of recipe
- *         category:
- *           type: string
- *           description: The category of recipe
- *         area:
- *           type: string
- *           description: The area where the recipe came from
- *         instructions:
- *           type: string
- *           description: The instructions how to cook a dish
- *         description:
- *           type: string
- *           description: The description of the recipe
- *         thumb:
- *           type: string
- *           description: The photo of the recipe
- *         preview:
- *           type: string
- *           description: Preview of the recipe photo
- *         time:
- *           type: string
- *           description: The amount of time needed tp cook
- *         tags:
- *           type: array
- *           items:
- *             type: string
- *           description: The search tags of the recipe
- *         ingredients:
- *           type: array
- *           items:
- *             id:
+ *         - owner
+ *       allOf:
+ *         - $ref: '#/components/schemas/RecipeRequest'
+ *         - type: object
+ *           properties:
+ *             owner:
  *               type: string
- *               description: An ingredient's ID
- *             measure:
+ *               description: ID of a creator of the recipe
+ *             _id:
  *               type: string
- *               description: The amount of ingredient
- *           description: Ingredients' array
- *         owner:
- *           type: string
- *           description: ID of a creator of the recipe
- *         _id:
- *           type: string
- *           description: The recipe's ID
- *         favorite:
- *           type: array
- *           items:
- *             _userId:
- *               type: string
- *               description: User's ID
- *           description: An array of user's ID who liked the recipe
- *         createdAt:
- *           type: date
- *           description: The time of recipe creation
- *         updateddAt:
- *           type: date
- *           description: The time of recipe last updation
+ *               description: The recipe's ID
+ *             favorite:
+ *               type: array
+ *               items:
+ *                 _userId:
+ *                   type: string
+ *                   description: User's ID
+ *               description: An array of user's ID who liked the recipe
+ *             createdAt:
+ *               type: date
+ *               description: The time of recipe creation
+ *             updatedAt:
+ *               type: date
+ *               description: The time of recipe last updation
  *       example:
  *         _id: 6462a8f74c3d0ddd28897fb8
  *         title: Mediterranean Pasta Salad

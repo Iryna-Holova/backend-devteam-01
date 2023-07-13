@@ -63,21 +63,7 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 total:
- *                   example: 1
- *                   description: The total number of recipes
- *                 pages:
- *                   example: 1
- *                   description: The amount of pages based on limit query
- *                 recipes:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/RecipeResponse'
- *                   description: An array of recipes
- *               definitions:
- *                 recipes:
- *                   $ref: '#/components/schemas/RecipeResponse'
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
  *       500:
  *         content:
  *           application/json:
