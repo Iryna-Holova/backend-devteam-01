@@ -108,6 +108,7 @@ const limitMainPageSchema = Joi.object({
 const getByCategoryParamsSchema = Joi.object({
   category: Joi.string()
     .valid(...categories)
+    .insensitive()
     .required(),
 });
 

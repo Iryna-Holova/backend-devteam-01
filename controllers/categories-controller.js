@@ -1,9 +1,9 @@
-const Category = require('../models/category-model');
+const Category = require("../models/category-model");
 
-const { ctrlWrapper } = require('../helpers');
+const { ctrlWrapper } = require("../helpers");
 
 const getAllCategories = async (req, res) => {
-  const result = await Category.find().sort({ name: 1 });
+  const result = await Category.find();
   res.json(result);
 };
 
