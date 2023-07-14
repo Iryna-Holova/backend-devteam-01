@@ -7,14 +7,9 @@
  *       required:
  *         - title
  *         - category
- *         - area
  *         - instructions
  *         - description
- *         - thumb
- *         - preview
  *         - time
- *         - youtube
- *         - tags
  *         - ingredients
  *       properties:
  *         title:
