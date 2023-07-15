@@ -22,11 +22,11 @@ const getMainPage = async (req, res) => {
     Recipe.find({ category: "Dessert" }).sort({ _id: -1 }).limit(limit)
   );
 
-  const [Brekfast, Miscellaneous, Chicken, Desserts] = await Promise.allSettled(
+  const [Breakfast, Miscellaneous, Chicken, Desserts] = await Promise.allSettled(
     arrayOfMainPagePromises
   );
   const result = {
-    Brekfast: Brekfast.value,
+    Breakfast: Breakfast.value,
     Miscellaneous: Miscellaneous.value,
     Chicken: Chicken.value,
     Desserts: Desserts.value,
