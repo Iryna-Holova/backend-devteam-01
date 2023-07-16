@@ -8,7 +8,6 @@ const {
   validateQuery,
   validateBody,
   authenticate,
-  upload,
 } = require("../../middlewares");
 const ctrlPopularRecipe = require("../../controllers/popular-recipe-controller");
 const ctrlFavorites = require("../../controllers/favorite-controller");
@@ -175,63 +174,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       500:
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/500'
- *         description: Internal Server Error
- */
-
-router.patch(
-  "/own/upload-photo/:id",
-  validateId,
-  authenticate,
-  upload.single("recipe"),
-  ctrlOwnRecipes.uploadPhoto
-);
-
-/**
- * @swagger
- * /own-recipes/update-photo/{id}:
- *   patch:
- *     summary: Update profile
- *     security:
- *       - Authorization: []
- *     tags: [Recipes]
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: recipe
- *         type: file
- *         required: true
- *         description: Recipe's photo
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Recipe's photo
- *     responses:
- *       204:
- *         description: No Content
- *       400:
- *         description: Bad Request
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: No file uploaded
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: The recipe not found
  *       500:
  *         content:
  *           application/json:
