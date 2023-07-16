@@ -103,7 +103,7 @@ router.delete(
  *                 message:
  *                   example: The ingredient deleted
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:

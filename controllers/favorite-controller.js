@@ -25,9 +25,18 @@ async function save(req, res) {
   const { _id: userId } = req.user;
   const { recipeId } = req.body;
 
+  const response = await Recipe.findOne({
+    recipeId,
+    favorite: { $elemMatch: { _userId: userId } },
+  });
+
+  if (response) {
+    throw HttpError(404, "The recipe has already added to favorite");
+  }
+
   const recipe = await Recipe.findByIdAndUpdate(
     recipeId,
-    { $addToSet: { favorite: { _userId: userId } } },
+    { $push: { favorite: { _userId: userId } } },
     {
       new: true,
     }

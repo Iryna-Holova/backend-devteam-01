@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { handleMongooseError } = require("../helpers");
+const { handleMongooseError, validationMessage } = require("../helpers");
 
 const categories = [
   "Seafood",
@@ -79,24 +79,68 @@ const recipeSchema = new Schema(
 recipeSchema.post("save", handleMongooseError);
 
 const createOwnRecipeSchema = Joi.object({
-  title: Joi.string().min(2).trim().required(),
-  category: Joi.valid(...categories).required(),
-  area: Joi.string(),
-  instructions: Joi.string().required(),
-  description: Joi.string().required(),
-  thumb: Joi.string(),
-  preview: Joi.string(),
-  time: Joi.string().required(),
-  youtube: Joi.string(),
-  tags: Joi.array().items(Joi.string()),
+  title: Joi.string()
+    .min(2)
+    .empty(false)
+    .trim()
+    .required()
+    .messages(validationMessage({ name: "title" })),
+  category: Joi.valid(...categories)
+    .required()
+    .empty(false)
+    .messages(validationMessage({ name: "category" })),
+  area: Joi.string()
+    .empty(false)
+    .trim()
+    .messages(validationMessage({ name: "area" })),
+  instructions: Joi.string()
+    .empty(false)
+    .trim()
+    .required()
+    .messages(validationMessage({ name: "instructions" })),
+  description: Joi.string()
+    .empty(false)
+    .trim()
+    .required()
+    .messages(validationMessage({ name: "description" })),
+  thumb: Joi.string()
+    .empty(false)
+    .trim()
+    .messages(validationMessage({ name: "thumb" })),
+  preview: Joi.string()
+    .empty(false)
+    .trim()
+    .messages(validationMessage({ name: "preview" })),
+  time: Joi.string()
+    .empty(false)
+    .trim()
+    .required()
+    .messages(validationMessage({ name: "time" })),
+  youtube: Joi.string()
+    .empty(false)
+    .trim()
+    .messages(validationMessage({ name: "youtube" })),
+  tags: Joi.array()
+    .items(Joi.string().empty(false).trim())
+    .messages(validationMessage({ name: "tags" })),
   ingredients: Joi.array()
+    .min(1)
     .items(
       Joi.object({
-        id: Joi.string().hex().length(24).required(),
-        measure: Joi.string().required(),
+        id: Joi.string()
+          .hex()
+          .length(24)
+          .required()
+          .messages(validationMessage({ name: "ingredient's id" })),
+        measure: Joi.string()
+          .required()
+          .empty(false)
+          .trim()
+          .messages(validationMessage({ name: "measure" })),
       })
     )
-    .required(),
+    .required()
+    .messages(validationMessage({ name: "ingredients" })),
 });
 
 const Recipe = model("recipe", recipeSchema);

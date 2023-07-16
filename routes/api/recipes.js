@@ -6,8 +6,14 @@ const {
   validateParams,
   validateId,
   validateQuery,
+  validateBody,
+  authenticate,
+  upload,
 } = require("../../middlewares");
+const ctrlPopularRecipe = require("../../controllers/popular-recipe-controller");
+const ctrlFavorites = require("../../controllers/favorite-controller");
 const { schemas } = require("../../models/recipe-model");
+const ctrlOwnRecipes = require("../../controllers/ownRecipes-controller");
 
 const router = express.Router();
 
@@ -119,13 +125,349 @@ router.get(
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
  *               properties:
  *                 message:
  *                   example: No recipe found in the category
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.get(
+  "/own",
+  validateQuery(schemas.getValidateQueryShema),
+  authenticate,
+  ctrlOwnRecipes.getOwn
+);
+
+/**
+ * @swagger
+ * /api/own-recipes:
+ *   get:
+ *     summary: Get all own recipes
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Page of own recipes array
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.patch(
+  "/own/upload-photo/:id",
+  validateId,
+  authenticate,
+  upload.single("recipe"),
+  ctrlOwnRecipes.uploadPhoto
+);
+
+/**
+ * @swagger
+ * /own-recipes/update-photo/{id}:
+ *   patch:
+ *     summary: Update profile
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: recipe
+ *         type: file
+ *         required: true
+ *         description: Recipe's photo
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Recipe's photo
+ *     responses:
+ *       204:
+ *         description: No Content
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: No file uploaded
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.post(
+  "/own",
+  authenticate,
+  validateBody(schemas.createOwnRecipeSchema),
+  ctrlOwnRecipes.create
+);
+
+/**
+ * @swagger
+ * /api/own-recipes:
+ *   post:
+ *     summary: Add an own recipe
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *            $ref: '#/components/schemas/RecipeRequest'
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RecipeResponse'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The name of the recipe in use
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.delete("/own/:id", authenticate, validateId, ctrlOwnRecipes.deleteById);
+
+/**
+ * @swagger
+ * /api/own-recipes:
+ *   delete:
+ *     summary: Delete an own recipe
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: A recipe id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe deleted
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.get(
+  "/favorites",
+  validateQuery(schemas.getValidateQueryShema),
+  authenticate,
+  ctrlFavorites.getAll
+);
+
+/**
+ * @swagger
+ * /api/favorite:
+ *   get:
+ *     summary: Get all favorite recipes
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Page of favorite recipes
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.post(
+  "/favorites",
+  authenticate,
+  validateBody(schemas.addFavoriteSchema),
+  ctrlFavorites.save
+);
+
+/**
+ * @swagger
+ * /api/favorite:
+ *   post:
+ *     summary: Add a recipe to favorite
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             required:
+ *               - recipeId
+ *             properties:
+ *               recipeId:
+ *                 example: 6462a8f74c3d0ddd28897fb8
+ *                 type: string
+ *                 description: A recipe id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe added succesfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe has already added to favorite
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.delete(
+  "/favorites/:id",
+  authenticate,
+  validateId,
+  ctrlFavorites.deleteById
+);
+
+/**
+ * @swagger
+ * /api/favorite:
+ *   delete:
+ *     summary: Delete a recipe from favorite
+ *     security:
+ *       - Authorization: []
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: A recipe's id
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe deleted from favorite
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
  *       500:
  *         content:
  *           application/json:
@@ -157,13 +499,39 @@ router.get("/:id", validateId, ctrlRecipes.getRecipeById);
  *             schema:
  *               $ref: '#/components/schemas/RecipeResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
  *               properties:
  *                 message:
  *                   example: No recipe found with id
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.get("/popular", ctrlPopularRecipe.getAll);
+
+/**
+ * @swagger
+ * /api/popular-recipe:
+ *   get:
+ *     summary: Get popular recipes
+ *     tags: [Recipes]
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/RecipeResponse'
+ *               description: An array of popular recipes
  *       500:
  *         content:
  *           application/json:

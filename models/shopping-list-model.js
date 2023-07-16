@@ -1,6 +1,6 @@
 const { Schema } = require("mongoose");
 const Joi = require("joi");
-const { handleMongooseError } = require("../helpers");
+const { handleMongooseError, validationMessage } = require("../helpers");
 
 const ShoppingListSchema = new Schema({
   _id: false,
@@ -24,9 +24,26 @@ const ShoppingListSchema = new Schema({
 ShoppingListSchema.post("save", handleMongooseError);
 
 const createSchema = Joi.object({
-  ingredientId: Joi.string().hex().length(24).required(),
-  recipeId: Joi.string().hex().length(24).required(),
-  measure: Joi.array().items(Joi.string()).required(),
+  ingredientId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
+    .messages(validationMessage({ name: "ingredientId" })),
+  recipeId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
+    .messages(validationMessage({ name: "recipeId" })),
+  measure: Joi.array()
+    .min(1)
+    .items(
+      Joi.string()
+        .empty(false)
+        .trim()
+        .messages(validationMessage({ name: "measure item" }))
+    )
+    .required()
+    .messages(validationMessage({ name: "measure" })),
 });
 
 const shoppingListSchemas = {

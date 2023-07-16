@@ -34,7 +34,7 @@ router.post("/subscribe", authenticate, validateBody(schemas.emailSchema), ctrl.
  *                 message:
  *                   example: Subscription email sent successfully
  *       400:
- *         description: Bad request
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:

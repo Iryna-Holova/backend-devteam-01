@@ -58,7 +58,7 @@ router.get("/verify/:verificationToken", ctrl.verify);
  *                 message:
  *                   example: Verification successful
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
@@ -102,7 +102,7 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *                 message:
  *                   example: Verification email sent
  *       400:
- *         description: Bad request
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
@@ -177,7 +177,7 @@ router.post("/logout", authenticate, ctrl.logout);
  *     tags: [Users]
  *     responses:
  *       204:
- *         description: OK
+ *         description: No Content
  *       500:
  *         content:
  *           application/json:
@@ -204,7 +204,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
  *             schema:
  *               $ref: '#/components/schemas/CurrentResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
@@ -250,7 +250,7 @@ router.patch(
  *             schema:
  *               $ref: '#/components/schemas/UpdateResponse'
  *       400:
- *         description: Bad request
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:

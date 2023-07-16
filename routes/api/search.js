@@ -45,7 +45,7 @@ router.get(
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
