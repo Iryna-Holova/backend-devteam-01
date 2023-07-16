@@ -22,8 +22,8 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
  *           schema:
  *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
- *       204:
- *         description: OK
+ *       201:
+ *         description: Created
  *       409:
  *         description: Conflict
  *         content:

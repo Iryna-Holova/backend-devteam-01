@@ -120,10 +120,7 @@ const login = async (req, res) => {
   //
   res.json({
     token,
-    user: {
-      email: user.email,
-      avatarURL: user.avatarURL,
-    },
+    user
   });
 };
 
@@ -143,13 +140,11 @@ const getCurrent = async (req, res) => {
     throw HttpError(404, "User not found");
   }
 
-  const { name, avatarURL, verify } = user;
+  // const { name, avatarURL, verify } = user;
 
   res.json({
-    email,
-    name,
-    avatarURL: avatarURL,
-    verify,
+    token: user.token,
+    user
   });
 };
 
