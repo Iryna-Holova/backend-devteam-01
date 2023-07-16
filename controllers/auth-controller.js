@@ -27,8 +27,6 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
   const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
 
-  registrationBaseURL = `${baseURL}/users`;
-
   await User.create({
     name,
     email,
@@ -37,7 +35,7 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const verifyEmail = createVerifyEmail(email, registrationBaseURL, verificationToken);
+  const verifyEmail = createVerifyEmail(email, baseURL, verificationToken);
 
   await sendEmail(verifyEmail);
 
