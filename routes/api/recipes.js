@@ -311,7 +311,7 @@ router.get(
  *         description: Internal Server Error
  */
 
-router.post(
+router.patch(
   "/favorites",
   authenticate,
   validateBody(schemas.addFavoriteSchema),
@@ -321,7 +321,7 @@ router.post(
 /**
  * @swagger
  * /api/favorite:
- *   post:
+ *   patch:
  *     summary: Add a recipe to favorite
  *     security:
  *       - Authorization: []

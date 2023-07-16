@@ -39,7 +39,7 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.status(204).end();
+  res.status(201).end();
 };
 
 const verify = async (req, res) => {
