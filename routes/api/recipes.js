@@ -8,6 +8,7 @@ const {
   validateQuery,
   validateBody,
   authenticate,
+	upload,
 } = require("../../middlewares");
 const ctrlPopularRecipe = require("../../controllers/popular-recipe-controller");
 const ctrlFavorites = require("../../controllers/favorite-controller");
@@ -185,7 +186,8 @@ router.get(
 router.post(
   "/own",
   authenticate,
-  validateBody(schemas.createOwnRecipeSchema),
+  upload.single("photo"),
+  // validateBody(schemas.createOwnRecipeSchema),
   ctrlOwnRecipes.create
 );
 

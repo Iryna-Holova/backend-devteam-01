@@ -6,6 +6,7 @@ function validationMessage({ name }) {
     "array.min": `The ${name} must has at least 1 item`,
     "string.min": `The ${name} must has at least 2 characters`,
     "string.length": `The ${name} must be 24 characters long`,
+    'array.base': `The ${name} must be an array`,
   };
 }
 
