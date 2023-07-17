@@ -148,7 +148,7 @@ router.get(
 
 /**
  * @swagger
- * /api/own-recipes:
+ * /api/recipes/own:
  *   get:
  *     summary: Get all own recipes
  *     security:
@@ -191,7 +191,7 @@ router.post(
 
 /**
  * @swagger
- * /api/own-recipes:
+ * /api/recipes/own:
  *   post:
  *     summary: Add an own recipe
  *     security:
@@ -230,7 +230,7 @@ router.delete("/own/:id", authenticate, validateId, ctrlOwnRecipes.deleteById);
 
 /**
  * @swagger
- * /api/own-recipes:
+ * /api/recipes/own/{id}:
  *   delete:
  *     summary: Delete an own recipe
  *     security:
@@ -277,7 +277,7 @@ router.get(
 
 /**
  * @swagger
- * /api/favorite:
+ * /api/recipes/favorite:
  *   get:
  *     summary: Get all favorite recipes
  *     security:
@@ -320,7 +320,7 @@ router.patch(
 
 /**
  * @swagger
- * /api/favorite:
+ * /api/recipes/favorite:
  *   patch:
  *     summary: Add a recipe to favorite
  *     security:
@@ -380,7 +380,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/favorite:
+ * /api/recipes/favorite:
  *   delete:
  *     summary: Delete a recipe from favorite
  *     security:
@@ -410,6 +410,33 @@ router.delete(
  *               properties:
  *                 message:
  *                   example: The recipe not found
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+
+router.get("/popular", ctrlPopularRecipe.getAll);
+
+/**
+ * @swagger
+ * /api/recipes/popular:
+ *   get:
+ *     summary: Get popular recipes
+ *     tags: [Recipes]
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/RecipeResponse'
+ *               description: An array of popular recipes
  *       500:
  *         content:
  *           application/json:
@@ -448,32 +475,6 @@ router.get("/:id", validateId, ctrlRecipes.getRecipeById);
  *               properties:
  *                 message:
  *                   example: No recipe found with id
- *       500:
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/500'
- *         description: Internal Server Error
- */
-
-router.get("/popular", ctrlPopularRecipe.getAll);
-
-/**
- * @swagger
- * /api/popular-recipe:
- *   get:
- *     summary: Get popular recipes
- *     tags: [Recipes]
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/RecipeResponse'
- *               description: An array of popular recipes
  *       500:
  *         content:
  *           application/json:

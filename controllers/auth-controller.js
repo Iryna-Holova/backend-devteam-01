@@ -7,7 +7,13 @@ const { uid } = require("uid");
 
 const { User } = require("../models/user-model");
 
-const { ctrlWrapper, HttpError, sendEmail, createVerifyEmail, cloudinary } = require("../helpers");
+const {
+  ctrlWrapper,
+  HttpError,
+  sendEmail,
+  createVerifyEmail,
+  cloudinary,
+} = require("../helpers");
 
 const { SECRET_KEY } = process.env;
 
@@ -24,8 +30,8 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const verificationToken = uid();
-  const avatarURL = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
-  const normalizedAvatarUrl = avatarURL.replace(/^\/\//, 'https://');
+  const avatarURL = gravatar.url(email, { s: "200", r: "pg", d: "identicon" });
+  const normalizedAvatarUrl = avatarURL.replace(/^\/\//, "https://");
 
   await User.create({
     name,
@@ -61,7 +67,7 @@ const verify = async (req, res) => {
 
   res.json({
     token,
-    user
+    user,
   });
 };
 
@@ -87,7 +93,11 @@ const resendVerify = async (req, res) => {
     await user.save();
   }
 
-  const verifyEmail = createVerifyEmail(email, registrationBaseURL, verificationToken);
+  const verifyEmail = createVerifyEmail(
+    email,
+    registrationBaseURL,
+    verificationToken
+  );
 
   const payload = { id: user.id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
@@ -95,7 +105,7 @@ const resendVerify = async (req, res) => {
   await sendEmail(verifyEmail);
   res.json({
     token,
-    user
+    user,
   });
 };
 
@@ -120,7 +130,7 @@ const login = async (req, res) => {
   //
   res.json({
     token,
-    user
+    user,
   });
 };
 
@@ -132,19 +142,12 @@ const logout = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email } = req.user;
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    throw HttpError(404, "User not found");
-  }
-
+  const user = req.user;
   // const { name, avatarURL, verify } = user;
 
   res.json({
     token: user.token,
-    user
+    user,
   });
 };
 
