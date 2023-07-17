@@ -24,7 +24,6 @@ async function create(req, res) {
   const { body } = req;
   const { _id: owner } = req.user;
   const parsedRecipe = JSON.parse(body.recipe);
-  console.log(parsedRecipe);
   const recipe = await Recipe.findOne({ title: parsedRecipe.title });
 
   if (recipe) {
