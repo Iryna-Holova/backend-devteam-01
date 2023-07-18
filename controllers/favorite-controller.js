@@ -30,7 +30,7 @@ async function save(req, res) {
   const { recipeId } = req.body;
 
   const response = await Recipe.findOne({
-    recipeId,
+    _id: recipeId,
     favorite: { $elemMatch: { _userId: userId } },
   });
 
@@ -57,7 +57,7 @@ async function deleteById(req, res) {
   const { _id: userId } = req.user;
   const { id: recipeId } = req.params;
   const response = await Recipe.findOne({
-    recipeId,
+    _id: recipeId,
     favorite: { $elemMatch: { _userId: userId } },
   });
 

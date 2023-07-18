@@ -337,7 +337,7 @@ router.get(
 
 /**
  * @swagger
- * /api/recipes/favorite:
+ * /api/recipes/favorites:
  *   get:
  *     summary: Get all favorite recipes
  *     security:
@@ -388,7 +388,7 @@ router.patch(
 
 /**
  * @swagger
- * /api/recipes/favorite:
+ * /api/recipes/favorites:
  *   patch:
  *     summary: Add a recipe to favorite
  *     security:
@@ -448,7 +448,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/recipes/favorite:
+ * /api/recipes/favorites:
  *   delete:
  *     summary: Delete a recipe from favorite
  *     security:
