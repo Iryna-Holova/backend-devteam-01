@@ -67,7 +67,13 @@ const verify = async (req, res) => {
 
   res.json({
     token,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      createdAt: user.createdAt,
+    },
   });
 };
 
@@ -105,7 +111,13 @@ const resendVerify = async (req, res) => {
   await sendEmail(verifyEmail);
   res.json({
     token,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      createdAt: user.createdAt,
+    },
   });
 };
 
@@ -130,7 +142,13 @@ const login = async (req, res) => {
   //
   res.json({
     token,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      createdAt: user.createdAt,
+    },
   });
 };
 
@@ -146,8 +164,13 @@ const getCurrent = async (req, res) => {
   // const { name, avatarURL, verify } = user;
 
   res.json({
-    token: user.token,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      createdAt: user.createdAt,
+    },
   });
 };
 
