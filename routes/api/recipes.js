@@ -8,7 +8,8 @@ const {
   validateQuery,
   validateBody,
   authenticate,
-	upload,
+  upload,
+  validateMultipart,
 } = require("../../middlewares");
 const ctrlPopularRecipe = require("../../controllers/popular-recipe-controller");
 const ctrlFavorites = require("../../controllers/favorite-controller");
@@ -187,7 +188,7 @@ router.post(
   "/own",
   authenticate,
   upload.single("photo"),
-  // validateBody(schemas.createOwnRecipeSchema),
+  validateMultipart({ schema: schemas.createOwnRecipeSchema, key: "recipe" }),
   ctrlOwnRecipes.create
 );
 
@@ -419,7 +420,6 @@ router.delete(
  *               $ref: '#/components/schemas/500'
  *         description: Internal Server Error
  */
-
 
 router.get("/popular", ctrlPopularRecipe.getAll);
 
