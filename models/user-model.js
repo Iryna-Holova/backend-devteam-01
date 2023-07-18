@@ -52,20 +52,20 @@ userSchema.post("save", handleMongooseError);
 const registerSchema = Joi.object({
   baseURL: Joi.string()
     .required()
-    .messages(validationMessage({ name: "BaseURL" })),
+    .messages(validationMessage({ name: "baseURL" })),
   user: Joi.object({
     name: Joi.string()
       .min(2)
       .required()
-      .messages(validationMessage({ name: "Name", minStr: 2 })),
+      .messages(validationMessage({ name: "name", minStr: 2 })),
     email: Joi.string()
       .pattern(emailRegexp)
       .required()
-      .messages(validationMessage({ name: "Email" })),
+      .messages(validationMessage({ name: "email" })),
     password: Joi.string()
       .min(6)
       .required()
-      .messages(validationMessage({ name: "Password", minStr: 6 })),
+      .messages(validationMessage({ name: "password", minStr: 6 })),
   }).required(),
 });
 
@@ -73,18 +73,18 @@ const emailSchema = Joi.object({
   email: Joi.string()
     .pattern(emailRegexp)
     .required()
-    .messages(validationMessage({ name: "Email" })),
+    .messages(validationMessage({ name: "email" })),
 });
 
 const loginSchema = Joi.object({
   password: Joi.string()
     .min(6)
     .required()
-    .messages(validationMessage({ name: "Password", minStr: 6 })),
+    .messages(validationMessage({ name: "password", minStr: 6 })),
   email: Joi.string()
     .pattern(emailRegexp)
     .required()
-    .messages(validationMessage({ name: "Email" })),
+    .messages(validationMessage({ name: "email" })),
 });
 
 const schemas = {

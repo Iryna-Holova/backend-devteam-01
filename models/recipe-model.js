@@ -84,46 +84,46 @@ const createOwnRecipeSchema = Joi.object({
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "Title", minStr: 2 })),
+    .messages(validationMessage({ name: "title", minStr: 2 })),
   category: Joi.string()
     .valid(...categories)
     .empty()
     .required()
-    .messages(validationMessage({ name: "Category", valid: categories })),
+    .messages(validationMessage({ name: "category", valid: categories })),
   area: Joi.string()
     .empty()
     .trim()
-    .messages(validationMessage({ name: "Area" })),
+    .messages(validationMessage({ name: "area" })),
   instructions: Joi.string()
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "Instructions" })),
+    .messages(validationMessage({ name: "instructions" })),
   description: Joi.string()
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "Description" })),
+    .messages(validationMessage({ name: "description" })),
   thumb: Joi.string()
     .empty()
     .trim()
-    .messages(validationMessage({ name: "Thumb" })),
+    .messages(validationMessage({ name: "thumb" })),
   preview: Joi.string()
     .empty()
     .trim()
-    .messages(validationMessage({ name: "Preview" })),
+    .messages(validationMessage({ name: "preview" })),
   time: Joi.string()
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "Time" })),
+    .messages(validationMessage({ name: "time" })),
   youtube: Joi.string()
     .empty()
     .trim()
-    .messages(validationMessage({ name: "Youtube" })),
+    .messages(validationMessage({ name: "youtube" })),
   tags: Joi.array()
     .items(Joi.string().empty().trim())
-    .messages(validationMessage({ name: "Tags" })),
+    .messages(validationMessage({ name: "tags" })),
   ingredients: Joi.array()
     .min(1)
     .items(
@@ -132,7 +132,7 @@ const createOwnRecipeSchema = Joi.object({
           .hex()
           .length(24)
           .required()
-          .messages(validationMessage({ name: "Ingredient's id", length: 24 })),
+          .messages(validationMessage({ name: "ingredient's id", length: 24 })),
         measure: Joi.string()
           .min(2)
           .max(24)
@@ -140,12 +140,12 @@ const createOwnRecipeSchema = Joi.object({
           .trim()
           .required()
           .messages(
-            validationMessage({ name: "Measure", maxStr: 24, minStr: 2 })
+            validationMessage({ name: "measure", maxStr: 24, minStr: 2 })
           ),
       })
     )
     .required()
-    .messages(validationMessage({ name: "Ingredients", minArr: 1 })),
+    .messages(validationMessage({ name: "ingredients", minArr: 1 })),
 });
 
 const Recipe = model("recipe", recipeSchema);
@@ -154,7 +154,7 @@ const limitMainPageSchema = Joi.object({
   limit: Joi.number()
     .default(1)
     .valid(1, 2, 4)
-    .messages(validationMessage({ name: "Limit", valid: [1, 2, 4] })),
+    .messages(validationMessage({ name: "limit", valid: [1, 2, 4] })),
 });
 
 const getByCategoryParamsSchema = Joi.object({
@@ -163,7 +163,7 @@ const getByCategoryParamsSchema = Joi.object({
     .insensitive()
     .required()
     .messages(
-      validationMessage({ name: "Category as param", valid: categories })
+      validationMessage({ name: "category as param", valid: categories })
     ),
 });
 
@@ -172,16 +172,16 @@ const addFavoriteSchema = Joi.object({
     .hex()
     .length(24)
     .required()
-    .messages(validationMessage({ name: "RecipeId", length: 24 })),
+    .messages(validationMessage({ name: "recipeId", length: 24 })),
 });
 
 const getValidateQueryShema = Joi.object({
   limit: Joi.number()
     .min(1)
-    .messages(validationMessage({ name: "'q' query", minNum: 1 })),
+    .messages(validationMessage({ name: "limit", minNum: 1 })),
   page: Joi.number()
     .min(1)
-    .messages(validationMessage({ name: "'q' query", minNum: 1 })),
+    .messages(validationMessage({ name: "page", minNum: 1 })),
   q: Joi.string().messages(validationMessage({ name: "'q' query" })),
 });
 

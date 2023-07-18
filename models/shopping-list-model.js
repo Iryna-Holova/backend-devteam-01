@@ -35,18 +35,18 @@ const createSchema = Joi.object({
     .hex()
     .length(24)
     .required()
-    .messages(validationMessage({ name: "IngredientId", length: 24 })),
+    .messages(validationMessage({ name: "ingredientId", length: 24 })),
   recipeId: Joi.string()
     .hex()
     .length(24)
     .required()
-    .messages(validationMessage({ name: "RecipeId", length: 24 })),
+    .messages(validationMessage({ name: "recipeId", length: 24 })),
   measure: Joi.string()
     .empty()
     .min(2)
     .max(24)
     .trim()
-    .messages(validationMessage({ name: "Measure", maxStr: 24 })),
+    .messages(validationMessage({ name: "measure", maxStr: 24 })),
 });
 
 const shoppingListSchemas = {
