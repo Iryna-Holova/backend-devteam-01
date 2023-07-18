@@ -35,7 +35,7 @@ async function save(req, res) {
   });
 
   if (response) {
-    throw HttpError(404, "The recipe has already added to favorite");
+    throw HttpError(400, "The recipe has already added to favorite");
   }
 
   const recipe = await Recipe.findByIdAndUpdate(

@@ -45,7 +45,7 @@ const register = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.status(201).end();
+  res.status(201).json({ message: "Success registration" });
 };
 
 const verify = async (req, res) => {
