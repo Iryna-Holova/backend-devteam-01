@@ -43,7 +43,7 @@ router.patch(
 /**
  * @swagger
  * /api/shopping-list:
- *   post:
+ *   patch:
  *     summary: Add an ingredient to shopping list
  *     security:
  *       - Authorization: []
@@ -63,6 +63,38 @@ router.patch(
  *               properties:
  *                 message:
  *                   example: The Ingredient added to shopping list
+ *       400:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient in a user's list from the recipe is already added
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient not found
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The recipe not found
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient in a user's list not found
  *       500:
  *         content:
  *           application/json:
@@ -108,7 +140,7 @@ router.delete(
  *             schema:
  *               properties:
  *                 message:
- *                   example: The ingredient in a user's list not found
+ *                   example: The ingredient in a user's list is not found with such a measure
  *       500:
  *         content:
  *           application/json:

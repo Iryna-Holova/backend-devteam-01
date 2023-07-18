@@ -22,13 +22,13 @@ async function create(req, res) {
   const recipe = await Recipe.findById(body.recipeId);
 
   if (!recipe) {
-    throw HttpError(400, "The recipe not found");
+    throw HttpError(404, "The recipe not found");
   }
 
   const ingredient = await Ingredient.findById(body.ingredientId);
 
   if (!ingredient) {
-    throw HttpError(400, "The ingredient not found");
+    throw HttpError(404, "The ingredient not found");
   }
 
   const ingredientInList = await User.findOne({
@@ -125,7 +125,10 @@ async function deleteById(req, res) {
   });
 
   if (!response) {
-    throw HttpError(404, "The ingredient in a user's list not found");
+    throw HttpError(
+      404,
+      "The ingredient in a user's list is not found with such a measure"
+    );
   }
 
   await User.updateOne(
