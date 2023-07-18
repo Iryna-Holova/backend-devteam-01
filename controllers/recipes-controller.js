@@ -6,19 +6,15 @@ const getMainPage = async (req, res) => {
   const { limit = 1 } = req.query;
   const arrayOfMainPagePromises = [];
   arrayOfMainPagePromises.push(
-    //    Recipe.find({ category: 'Breakfast' }, null, { limit }).sort({ name: 1 }).exec()
     Recipe.find({ category: "Breakfast" }).sort({ _id: -1 }).limit(limit)
   );
   arrayOfMainPagePromises.push(
-    // Recipe.find({ category: 'Miscellaneous' }, null, { limit }).sort({ name: 1 }).exec()
     Recipe.find({ category: "Miscellaneous" }).sort({ _id: -1 }).limit(limit)
   );
   arrayOfMainPagePromises.push(
-    //  Recipe.find({ category: 'Chicken' }, null, { limit }).sort({ name: 1 }).exec()
     Recipe.find({ category: "Chicken" }).sort({ _id: -1 }).limit(limit)
   );
   arrayOfMainPagePromises.push(
-    //  Recipe.find({ category: 'Desserts' }, null, { limit }).sort({ name: 1 }).exec()
     Recipe.find({ category: "Dessert" }).sort({ _id: -1 }).limit(limit)
   );
 
@@ -32,26 +28,6 @@ const getMainPage = async (req, res) => {
     Desserts: Desserts.value,
   };
 
-  // Promise.all(arrayOfMainPagePromises).then(results => {
-  //   const initialValue = {
-  //     Breakfast: [],
-  //     Miscellaneous: [],
-  //     Chicken: [],
-  //     Desserts: [],
-  //   };
-
-  //   const result = results
-  //     .flatMap(item => {
-  //       return [...item];
-  //     })
-  //     .reduce((queryResult, recipe) => {
-  //       queryResult[recipe.category].push(recipe);
-
-  //       return queryResult;
-  //     }, initialValue);
-
-  //   res.json(result);
-  // });
   res.json(result);
 };
 
@@ -63,7 +39,6 @@ const getRecipesByCategory = async (req, res) => {
 
   const query = category.trim();
 
-  //const response = await Recipe.find({ category })
   const response = await Recipe.find({ category: { $regex: query, $options: "i" } })
     .sort({ _id: -1 })
     .skip(skip)
@@ -89,9 +64,7 @@ const getRecipeById = async (req, res) => {
     obj.ingredients = [
       ...response.ingredients.map(item => {
         const { id, img, name, desc } = item.id;
-        //const { _id, img, name, desc } = item.id;
         const tmp = { id, name, desc, img, mesure: item.measure };
-        //const tmp = { _id, name, desc, img, mesure: item.measure };
 
         return tmp;
       }),
