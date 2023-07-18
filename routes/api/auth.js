@@ -1,7 +1,7 @@
 const express = require("express");
 
 const ctrl = require("../../controllers/auth-controller");
-
+const ctrlsubscription = require("../../controllers/subscription-controller");
 const { authenticate, validateBody, upload } = require("../../middlewares");
 const { schemas } = require("../../models/user-model");
 
@@ -257,6 +257,54 @@ router.patch(
  *               properties:
  *                 message:
  *                   example: No file uploaded
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.post(
+  "/subscription",
+  authenticate,
+  validateBody(schemas.emailSchema),
+  ctrlsubscription.sendSubscriptionEmail
+);
+
+/**
+ * @swagger
+ * /api/users/subscription:
+ *   post:
+ *     summary: Subscribe to newsletter
+ *     tags: [Subscriptions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   example: johnsmith@gmail.com
+ *                   description: User's email
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: Subscription email sent successfully
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: This email is already subscribed to the newsletter
  *       500:
  *         content:
  *           application/json:

@@ -18,6 +18,60 @@ const ctrlOwnRecipes = require("../../controllers/ownRecipes-controller");
 
 const router = express.Router();
 
+router.get(
+  "/search",
+  validateQuery(schemas.getValidateQueryShema),
+  ctrlRecipes.getSearchByName
+);
+
+/**
+ * @swagger
+ * /api/recipes/search?q=title:
+ *   get:
+ *     summary: Get a recipe by the title
+ *     tags: [Recipes]
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: A recipe title
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Page of recipes
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaginatedRecipeResponse'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: No recipes found by the title
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
 router.get("/category-list", ctrlCategories.getAllCategories);
 
 /**

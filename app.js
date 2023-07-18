@@ -10,8 +10,6 @@ const authRouter = require("./routes/api/auth");
 const recipesRouter = require("./routes/api/recipes");
 const shoppingListRouter = require("./routes/api/shopping-list");
 const ingredientsRouter = require("./routes/api/ingredients");
-const subscribeRouter = require("./routes/api/subscribe");
-const searchRouter = require("./routes/api/search");
 
 const app = express();
 
@@ -22,12 +20,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/users", authRouter);
+app.use("/api/users", authRouter);
 app.use("/api/recipes/", recipesRouter);
 app.use("/api/shopping-list", shoppingListRouter);
 app.use("/api/ingredients", ingredientsRouter);
-app.use("/subscriptions", subscribeRouter);
-app.use("/api/search", searchRouter);
 
 const specs = swaggerJsdoc(swaggerOptions);
 app.use(
