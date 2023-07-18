@@ -67,9 +67,9 @@ The API is RESTful and adheres to the principles of HTTP methods and status code
 - **GET /api/recipes/own**: Get a list of own created recipes.
 - **POST /api/recipes/own**: Create a new recipe.
 - **DELETE /api/recipes/own**: Delete a recipe by ID.
-- **GET /api/recipes/favotire**: Get a list of liked recipes.
-- **PATCH /api/recipes/favotire**: Add a liked recipe to favorites.
-- **DELETE /api/recipes/favotire**: Delete a recipe by ID.
+- **GET /api/recipes/favorites**: Get a list of liked recipes.
+- **PATCH /api/recipes/favorites**: Add a liked recipe to favorites.
+- **DELETE /api/recipes/favorites**: Delete a recipe by ID.
 - **GET /api/recipes/popular**: Get a list of the most popular recipes.
 - **GET /api/recipes/{id}**: Get a recipe by ID.
 - **GET /api/categories/{id}**: Get a list of recipes' categories.
