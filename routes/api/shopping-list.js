@@ -86,13 +86,12 @@ router.delete(
  *     security:
  *       - Authorization: []
  *     tags: [Shopping list]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: An ingredient's id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ShoppingListRequest'
  *     responses:
  *       200:
  *         description: OK

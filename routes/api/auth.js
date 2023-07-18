@@ -23,7 +23,13 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
  *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
  *       201:
- *         description: Created
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: Success registration
  *       409:
  *         description: Conflict
  *         content:
@@ -54,9 +60,7 @@ router.get("/verify/:verificationToken", ctrl.verify);
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 message:
- *                   example: Verification successful
+ *               $ref: '#/components/schemas/LoginResponse'
  *       404:
  *         description: Not Found
  *         content:
@@ -98,9 +102,7 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 message:
- *                   example: Verification email sent
+ *               $ref: '#/components/schemas/LoginResponse'
  *       400:
  *         description: Bad Request
  *         content:
@@ -277,7 +279,7 @@ router.post(
  * /api/users/subscription:
  *   post:
  *     summary: Subscribe to newsletter
- *     tags: [Subscriptions]
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:

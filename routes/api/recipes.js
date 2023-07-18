@@ -257,6 +257,9 @@ router.post(
  *     requestBody:
  *       required: true
  *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/RecipeRequest'
  *         application/json:
  *           schema:
  *            $ref: '#/components/schemas/RecipeRequest'
@@ -360,6 +363,14 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: There are no favorite recipes
  *       500:
  *         content:
  *           application/json:

@@ -5,26 +5,17 @@
  *     CurrentResponse:
  *       type: object
  *       required:
- *         - email
- *         - name
- *         - avatarURL
- *         - verify
+ *         - user
  *       properties:
- *         email:
- *           type: string
- *           description: User's email
- *         name:
- *           type: string
- *           description: User's name
- *         avatarURL:
- *           type: string
- *           description: User's avatar
- *         verify:
- *           type: boolean
- *           description: shows if user is verified
+ *         user:
+ *           type: object
+ *           allOf:
+ *             - $ref: '#/components/schemas/UserResponse'
  *       example:
- *         email: johnsmith@gmail.com
- *         name: John Smith
- *         avatarURL: https://www.gravatar.com/avatar/0467c9040c0fe961309f2dc36e94666f?s=200&r=pg&d=identicon
- *         verify: true
+ *         user:
+ *           _id: 64a94d5023fe093a63304a13
+ *           name: John
+ *           email: johnsmith@gmail.com
+ *           avatarURL: https://www.gravatar.com/avatar/0467c9040c0fe961309f2dc36e94666f?s=200&r=pg&d=identicon
+ *           createdAt: 2023-07-10T18:07:54.752Z
  */

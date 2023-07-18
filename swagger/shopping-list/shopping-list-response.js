@@ -12,6 +12,7 @@
  *         - img
  *         - recipeId
  *         - measure
+ *         - measures
  *       properties:
  *         ingredientId:
  *           type: string
@@ -28,19 +29,24 @@
  *         img:
  *           type: string
  *           description: Ingredient image
- *         recipeId:
- *           type: string
- *           description: A recipe ID in shopping list
- *         measure:
- *           type: array
- *           items: string
- *           description: The amount of ingredient
+ *         measures:
+ *           type: object
+ *           properties:
+ *             recipeId:
+ *               type: string
+ *               description: A recipe ID in shopping list
+ *             measure:
+ *               type: array
+ *               items: string
+ *               description: An amount of ingredient
+ *           description: An array of recipe ID and measure of ingredient
  *       example:
  *         ingredientId:
  *           _id: 640c2dd963a319ea671e365b
  *           name: Chicken
  *           desc: The chicken is a type of domesticated fowl, a subspecies of the red junglefowl (Gallus gallus). It is one of the most common and widespread domestic animals...
  *           img: https://res.cloudinary.com/ddbvbv5sp/image/upload/v1678564123/rw8pn3541bmukb8d3mio.png
- *         recipeId: 64a976c1db13bafb5c02bdee
- *         measure: ["2kg cut into 3cm cubes"]
+ *         measures:
+ *          - recipeId: 64a976c1db13bafb5c02bdee
+ *            measure: "2kg cut into 3cm cubes"
  */
