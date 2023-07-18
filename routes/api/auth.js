@@ -11,7 +11,7 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
 /**
  * @swagger
- * /users/register:
+ * /api/users/register:
  *   post:
  *     summary: Sign up a user
  *     tags: [Users]
@@ -50,7 +50,7 @@ router.get("/verify/:verificationToken", ctrl.verify);
 
 /**
  * @swagger
- * /users/verify/{verificationToken}:
+ * /api/users/verify/{verificationToken}:
  *   get:
  *     summary: Verify email
  *     tags: [Users]
@@ -82,7 +82,7 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
 
 /**
  * @swagger
- * /users/verify:
+ * /api/users/verify:
  *   post:
  *     summary: Re-verification of email
  *     tags: [Users]
@@ -132,7 +132,7 @@ router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
 /**
  * @swagger
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: Log in
  *     tags: [Users]
@@ -171,7 +171,7 @@ router.post("/logout", authenticate, ctrl.logout);
 
 /**
  * @swagger
- * /users/logout:
+ * /api/users/logout:
  *   post:
  *     summary: Log out
  *     security:
@@ -192,7 +192,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
 
 /**
  * @swagger
- * /users/current:
+ * /api/users/current:
  *   get:
  *     summary: Current
  *     security:
@@ -230,7 +230,7 @@ router.patch(
 
 /**
  * @swagger
- * /users/update:
+ * /api/users/update:
  *   patch:
  *     summary: Update profile
  *     security:

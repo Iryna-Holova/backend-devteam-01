@@ -78,23 +78,7 @@ router.patch(
  *             schema:
  *               properties:
  *                 message:
- *                   example: The ingredient not found
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: The recipe not found
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: The ingredient in a user's list not found
+ *                   example: The ingredient not found / The recipe not found / The ingredient in a user's list not found
  *       500:
  *         content:
  *           application/json:

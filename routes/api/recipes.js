@@ -79,7 +79,7 @@ router.get("/category-list", ctrlCategories.getAllCategories);
  * /api/recipes/category-list:
  *   get:
  *     summary: Get all categories
- *     tags: [Categories]
+ *     tags: [Recipes]
  *     responses:
  *       200:
  *         description: OK
