@@ -11,6 +11,7 @@
  *         _id:
  *           example: 6462a6cd4c3d0ddd28897f8a
  *           type: string
+ *           format: uuid
  *           description: Category id
  *         name:
  *           example: Seafood

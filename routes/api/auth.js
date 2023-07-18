@@ -1,7 +1,7 @@
 const express = require("express");
 
 const ctrl = require("../../controllers/auth-controller");
-
+const ctrlsubscription = require("../../controllers/subscription-controller");
 const { authenticate, validateBody, upload } = require("../../middlewares");
 const { schemas } = require("../../models/user-model");
 
@@ -11,7 +11,7 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
 /**
  * @swagger
- * /users/register:
+ * /api/users/register:
  *   post:
  *     summary: Sign up a user
  *     tags: [Users]
@@ -22,8 +22,14 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
  *           schema:
  *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
- *       204:
+ *       201:
  *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: Success registration
  *       409:
  *         description: Conflict
  *         content:
@@ -44,7 +50,7 @@ router.get("/verify/:verificationToken", ctrl.verify);
 
 /**
  * @swagger
- * /users/verify/{verificationToken}:
+ * /api/users/verify/{verificationToken}:
  *   get:
  *     summary: Verify email
  *     tags: [Users]
@@ -54,11 +60,9 @@ router.get("/verify/:verificationToken", ctrl.verify);
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 message:
- *                   example: Verification successful
+ *               $ref: '#/components/schemas/LoginResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
@@ -78,7 +82,7 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
 
 /**
  * @swagger
- * /users/verify:
+ * /api/users/verify:
  *   post:
  *     summary: Re-verification of email
  *     tags: [Users]
@@ -98,11 +102,9 @@ router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerify);
  *         content:
  *           application/json:
  *             schema:
- *               properties:
- *                 message:
- *                   example: Verification email sent
+ *               $ref: '#/components/schemas/LoginResponse'
  *       400:
- *         description: Bad request
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
@@ -130,7 +132,7 @@ router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
 /**
  * @swagger
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: Log in
  *     tags: [Users]
@@ -169,7 +171,7 @@ router.post("/logout", authenticate, ctrl.logout);
 
 /**
  * @swagger
- * /users/logout:
+ * /api/users/logout:
  *   post:
  *     summary: Log out
  *     security:
@@ -177,7 +179,7 @@ router.post("/logout", authenticate, ctrl.logout);
  *     tags: [Users]
  *     responses:
  *       204:
- *         description: OK
+ *         description: No Content
  *       500:
  *         content:
  *           application/json:
@@ -190,7 +192,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
 
 /**
  * @swagger
- * /users/current:
+ * /api/users/current:
  *   get:
  *     summary: Current
  *     security:
@@ -204,7 +206,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
  *             schema:
  *               $ref: '#/components/schemas/CurrentResponse'
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
@@ -228,7 +230,7 @@ router.patch(
 
 /**
  * @swagger
- * /users/update:
+ * /api/users/update:
  *   patch:
  *     summary: Update profile
  *     security:
@@ -250,13 +252,61 @@ router.patch(
  *             schema:
  *               $ref: '#/components/schemas/UpdateResponse'
  *       400:
- *         description: Bad request
+ *         description: Bad Request
  *         content:
  *           application/json:
  *             schema:
  *               properties:
  *                 message:
  *                   example: No file uploaded
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/500'
+ *         description: Internal Server Error
+ */
+
+router.post(
+  "/subscription",
+  authenticate,
+  validateBody(schemas.emailSchema),
+  ctrlsubscription.sendSubscriptionEmail
+);
+
+/**
+ * @swagger
+ * /api/users/subscription:
+ *   post:
+ *     summary: Subscribe to newsletter
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   example: johnsmith@gmail.com
+ *                   description: User's email
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: Subscription email sent successfully
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: This email is already subscribed to the newsletter
  *       500:
  *         content:
  *           application/json:

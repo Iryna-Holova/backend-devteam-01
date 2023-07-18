@@ -19,19 +19,23 @@
  *               description: ID of a creator of the recipe
  *             _id:
  *               type: string
+ *               format: uuid
  *               description: The recipe's ID
  *             favorite:
  *               type: array
  *               items:
  *                 _userId:
  *                   type: string
+ *                   format: uuid
  *                   description: User's ID
  *               description: An array of user's ID who liked the recipe
  *             createdAt:
- *               type: date
+ *               type: string
+ *               format: date
  *               description: The time of recipe creation
  *             updatedAt:
- *               type: date
+ *               type: string
+ *               format: date
  *               description: The time of recipe last updation
  *       example:
  *         _id: 6462a8f74c3d0ddd28897fb8

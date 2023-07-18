@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateBody, validateId, authenticate } = require("../../middlewares");
+const { validateBody, authenticate } = require("../../middlewares");
 const shoppingListController = require("../../controllers/shopping-list-controller");
 const { shoppingListSchemas } = require("../../models/shopping-list-model");
 
@@ -33,7 +33,7 @@ router.get("/", authenticate, shoppingListController.getAll);
  *         description: Internal Server Error
  */
 
-router.post(
+router.patch(
   "/",
   authenticate,
   validateBody(shoppingListSchemas.createSchema),
@@ -43,7 +43,7 @@ router.post(
 /**
  * @swagger
  * /api/shopping-list:
- *   post:
+ *   patch:
  *     summary: Add an ingredient to shopping list
  *     security:
  *       - Authorization: []
@@ -63,6 +63,22 @@ router.post(
  *               properties:
  *                 message:
  *                   example: The Ingredient added to shopping list
+ *       400:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient in a user's list from the recipe is already added
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: The ingredient not found / The recipe not found / The ingredient in a user's list not found
  *       500:
  *         content:
  *           application/json:
@@ -72,9 +88,9 @@ router.post(
  */
 
 router.delete(
-  "/:id",
+  "/",
   authenticate,
-  validateId,
+  validateBody(shoppingListSchemas.createSchema),
   shoppingListController.deleteById
 );
 
@@ -86,13 +102,12 @@ router.delete(
  *     security:
  *       - Authorization: []
  *     tags: [Shopping list]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: An ingredient's id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ShoppingListRequest'
  *     responses:
  *       200:
  *         description: OK
@@ -103,13 +118,13 @@ router.delete(
  *                 message:
  *                   example: The ingredient deleted
  *       404:
- *         description: Not found
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
  *               properties:
  *                 message:
- *                   example: The ingredient in a user's list not found
+ *                   example: The ingredient in a user's list is not found with such a measure
  *       500:
  *         content:
  *           application/json:

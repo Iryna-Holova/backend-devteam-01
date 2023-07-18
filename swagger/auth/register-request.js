@@ -10,6 +10,7 @@
  *       properties:
  *         baseURL:
  *           type: string
+ *           example: http://localhost:3000
  *           description: front-end's base url
  *         user:
  *           type: object

@@ -5,7 +5,6 @@ const { default: mongoose } = require("mongoose");
 async function getAll(req, res) {
   const { _id } = req.user;
   const { page = 1, limit = 4 } = req.query;
-
   const skip = (page - 1) * limit;
   const ObjectId = mongoose.Types.ObjectId;
   const searchFilter = {
@@ -16,6 +15,11 @@ async function getAll(req, res) {
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);
+
+  if (total === 0) {
+    throw HttpError(404, `There are no favorite recipes`);
+  }
+
   const pages = Math.ceil(total / limit);
 
   res.json({ total, pages, recipes });
@@ -25,9 +29,18 @@ async function save(req, res) {
   const { _id: userId } = req.user;
   const { recipeId } = req.body;
 
+  const response = await Recipe.findOne({
+    recipeId,
+    favorite: { $elemMatch: { _userId: userId } },
+  });
+
+  if (response) {
+    throw HttpError(400, "The recipe has already added to favorite");
+  }
+
   const recipe = await Recipe.findByIdAndUpdate(
     recipeId,
-    { $addToSet: { favorite: { _userId: userId } } },
+    { $push: { favorite: { _userId: userId } } },
     {
       new: true,
     }

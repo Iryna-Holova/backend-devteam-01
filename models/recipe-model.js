@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { handleMongooseError } = require("../helpers");
+const { handleMongooseError, validationMessages } = require("../helpers");
 
 const categories = [
   "Seafood",
@@ -79,47 +79,83 @@ const recipeSchema = new Schema(
 recipeSchema.post("save", handleMongooseError);
 
 const createOwnRecipeSchema = Joi.object({
-  title: Joi.string().min(2).trim().required(),
-  category: Joi.valid(...categories).required(),
-  area: Joi.string(),
-  instructions: Joi.string().required(),
-  description: Joi.string().required(),
-  thumb: Joi.string(),
-  preview: Joi.string(),
-  time: Joi.string().required(),
-  youtube: Joi.string(),
-  tags: Joi.array().items(Joi.string()),
+  title: Joi.string()
+    .min(2)
+    .empty()
+    .trim()
+    .label("title")
+    .required()
+    .messages(validationMessages),
+  category: Joi.string()
+    .valid(...categories)
+    .empty()
+    .required()
+    .messages(validationMessages),
+  area: Joi.string().empty().trim().messages(validationMessages),
+  instructions: Joi.string()
+    .empty()
+    .trim()
+    .required()
+    .messages(validationMessages),
+  description: Joi.string()
+    .empty()
+    .trim()
+    .required()
+    .messages(validationMessages),
+  thumb: Joi.string().empty().trim().messages(validationMessages),
+  preview: Joi.string().empty().trim().messages(validationMessages),
+  time: Joi.string().empty().trim().required().messages(validationMessages),
+  youtube: Joi.string().empty().trim().messages(validationMessages),
+  tags: Joi.array()
+    .items(Joi.string().empty().trim())
+    .messages(validationMessages),
   ingredients: Joi.array()
+    .min(1)
     .items(
       Joi.object({
-        id: Joi.string().hex().length(24).required(),
-        measure: Joi.string().required(),
+        id: Joi.string()
+          .hex()
+          .length(24)
+          .required()
+          .messages(validationMessages),
+        measure: Joi.string()
+          .min(2)
+          .max(24)
+          .empty()
+          .trim()
+          .required()
+          .messages(validationMessages),
       })
     )
-    .required(),
+    .required()
+    .messages(validationMessages),
 });
-
 const Recipe = model("recipe", recipeSchema);
 
 const limitMainPageSchema = Joi.object({
-  limit: Joi.number().default(1).valid(1, 2, 4),
+  limit: Joi.number().default(1).valid(1, 2, 4).messages(validationMessages),
 });
 
 const getByCategoryParamsSchema = Joi.object({
   category: Joi.string()
     .valid(...categories)
     .insensitive()
-    .required(),
+    .required()
+    .messages(validationMessages),
 });
 
 const addFavoriteSchema = Joi.object({
-  recipeId: Joi.string().hex().length(24).required(),
+  recipeId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
+    .messages(validationMessages),
 });
 
 const getValidateQueryShema = Joi.object({
-  limit: Joi.number().min(1),
-  page: Joi.number().min(1),
-  q: Joi.string(),
+  limit: Joi.number().min(1).messages(validationMessages),
+  page: Joi.number().min(1).messages(validationMessages),
+  q: Joi.string().messages(validationMessages),
 });
 
 const schemas = {
