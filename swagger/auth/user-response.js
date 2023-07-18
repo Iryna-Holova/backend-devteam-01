@@ -13,6 +13,7 @@
  *       properties:
  *         _id:
  *           type: string
+ *           format: uuid
  *           description: User ID
  *         name:
  *           type: string

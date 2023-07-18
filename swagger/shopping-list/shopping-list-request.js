@@ -11,9 +11,11 @@
  *       properties:
  *         ingredientId:
  *           type: string
+ *           format: uuid
  *           description: Ingredient id in shopping list
  *         recipeId:
  *           type: string
+ *           format: uuid
  *           description: A recipe ID in shopping list
  *         measure:
  *           type: string

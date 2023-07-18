@@ -13,6 +13,7 @@
  *         _id:
  *           example: 640c2dd963a319ea671e365b
  *           type: string
+ *           format: uuid
  *           description: Ingredient id
  *         name:
  *           example: Chicken

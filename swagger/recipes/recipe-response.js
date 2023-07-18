@@ -19,12 +19,14 @@
  *               description: ID of a creator of the recipe
  *             _id:
  *               type: string
+ *               format: uuid
  *               description: The recipe's ID
  *             favorite:
  *               type: array
  *               items:
  *                 _userId:
  *                   type: string
+ *                   format: uuid
  *                   description: User's ID
  *               description: An array of user's ID who liked the recipe
  *             createdAt:
