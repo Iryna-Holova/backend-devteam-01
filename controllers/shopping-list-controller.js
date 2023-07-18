@@ -1,5 +1,7 @@
 const { User } = require("../models/user-model");
 const { ctrlWrapper, HttpError } = require("../helpers");
+const { Recipe } = require("../models/recipe-model");
+const Ingredient = require("../models/indredients-model");
 
 async function getAll(req, res) {
   const { _id } = req.user;
@@ -17,12 +19,24 @@ async function create(req, res) {
   const { _id: userId } = req.user;
   const { body } = req;
 
-  const response = await User.findOne({
+  const recipe = await Recipe.findById(body.recipeId);
+
+  if (!recipe) {
+    throw HttpError(400, "The recipe not found");
+  }
+
+  const ingredient = await Ingredient.findById(body.ingredientId);
+
+  if (!ingredient) {
+    throw HttpError(400, "The ingredient not found");
+  }
+
+  const ingredientInList = await User.findOne({
     _id: userId,
     shoppingList: { $elemMatch: { ingredientId: body.ingredientId } },
   });
 
-  if (!response) {
+  if (!ingredientInList) {
     await User.findByIdAndUpdate(
       userId,
       {
@@ -47,7 +61,7 @@ async function create(req, res) {
     return;
   }
 
-  const isRecipeWithMeasure = await User.findOne({
+  const isRecipeMeasureDoubled = await User.findOne({
     _id: userId,
     shoppingList: {
       $elemMatch: {
@@ -62,7 +76,7 @@ async function create(req, res) {
     },
   });
 
-  if (isRecipeWithMeasure) {
+  if (isRecipeMeasureDoubled) {
     throw HttpError(
       400,
       "The ingredient in a user's list from the recipe is already added"
