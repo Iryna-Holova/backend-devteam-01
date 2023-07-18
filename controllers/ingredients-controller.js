@@ -1,6 +1,6 @@
 const Ingredient = require("../models/indredients-model");
 const { Recipe } = require("../models/recipe-model");
-const { ctrlWrapper, upCaseFirstLetter } = require("../helpers");
+const { ctrlWrapper, upCaseFirstLetter, HttpError } = require("../helpers");
 
 async function getAll(req, res) {
   const result = await Ingredient.find({}).sort({ name: "asc" });
@@ -17,6 +17,11 @@ async function getByName(req, res) {
   const ingredients = await Ingredient.find({
     name: { $regex: name, $options: "i" },
   });
+
+  if (ingredients.length === 0) {
+    throw HttpError(404, `The recipe not found with name: ${name}`);
+  }
+
   const ingredientsId = ingredients.map((ingredient) => ingredient.id);
   const searchFilter = {
     ingredients: {
