@@ -178,8 +178,14 @@ router.post("/logout", authenticate, ctrl.logout);
  *       - Authorization: []
  *     tags: [Users]
  *     responses:
- *       204:
- *         description: No Content
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: Success log out
  *       500:
  *         content:
  *           application/json:
