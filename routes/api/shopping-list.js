@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateBody, validateId, authenticate } = require("../../middlewares");
+const { validateBody, authenticate } = require("../../middlewares");
 const shoppingListController = require("../../controllers/shopping-list-controller");
 const { shoppingListSchemas } = require("../../models/shopping-list-model");
 
@@ -33,7 +33,7 @@ router.get("/", authenticate, shoppingListController.getAll);
  *         description: Internal Server Error
  */
 
-router.post(
+router.patch(
   "/",
   authenticate,
   validateBody(shoppingListSchemas.createSchema),
@@ -72,9 +72,9 @@ router.post(
  */
 
 router.delete(
-  "/:id",
+  "/",
   authenticate,
-  validateId,
+  validateBody(shoppingListSchemas.createSchema),
   shoppingListController.deleteById
 );
 

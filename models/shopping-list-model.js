@@ -9,15 +9,22 @@ const ShoppingListSchema = new Schema({
     required: [true, "The ingredient's id is required"],
     ref: "ingredient",
   },
-  recipeId: {
-    type: Schema.Types.ObjectId,
-    required: [true, "The recipe's id is required"],
-    ref: "recipe",
-  },
-  measure: {
-    type: [String],
-    required: [true, "The measure is required"],
-    default: [],
+  measures: {
+    _id: false,
+    type: [
+      {
+        recipeId: {
+          type: Schema.Types.ObjectId,
+          required: [true, "The recipe's id is required"],
+          ref: "recipe",
+        },
+        measure: {
+          type: String,
+          required: [true, "The measure is required"],
+        },
+      },
+    ],
+    required: [true, "The array of ingredients is required"],
   },
 });
 
@@ -34,16 +41,10 @@ const createSchema = Joi.object({
     .length(24)
     .required()
     .messages(validationMessage({ name: "recipeId" })),
-  measure: Joi.array()
-    .min(1)
-    .items(
-      Joi.string()
-        .empty(false)
-        .trim()
-        .messages(validationMessage({ name: "measure item" }))
-    )
-    .required()
-    .messages(validationMessage({ name: "measure" })),
+  measure: Joi.string()
+    .empty()
+    .trim()
+    .messages(validationMessage({ name: "measure item" })),
 });
 
 const shoppingListSchemas = {

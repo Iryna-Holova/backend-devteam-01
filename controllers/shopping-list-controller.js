@@ -14,11 +14,74 @@ async function create(req, res) {
   const { _id: userId } = req.user;
   const { body } = req;
 
-  await User.findByIdAndUpdate(
-    userId,
-    { $push: { shoppingList: { ...body } } },
+  const response = await User.findOne({
+    _id: userId,
+    shoppingList: { $elemMatch: { ingredientId: body.ingredientId } },
+  });
+
+  if (!response) {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          shoppingList: {
+            ingredientId: body.ingredientId,
+            measures: [
+              {
+                recipeId: body.recipeId,
+                measure: body.measure,
+              },
+            ],
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.json({ message: "The Ingredient added to shopping list" });
+    return;
+  }
+
+  const isRecipeWithMeasure = await User.findOne({
+    _id: userId,
+    shoppingList: {
+      $elemMatch: {
+        ingredientId: body.ingredientId,
+        measures: {
+          $elemMatch: {
+            recipeId: body.recipeId,
+            measure: body.measure,
+          },
+        },
+      },
+    },
+  });
+
+  if (isRecipeWithMeasure) {
+    throw HttpError(
+      400,
+      "The ingredient in a user's list from the recipe is already added"
+    );
+  }
+
+  await User.updateOne(
     {
-      new: true,
+      _id: userId,
+      shoppingList: {
+        $elemMatch: {
+          ingredientId: body.ingredientId,
+        },
+      },
+    },
+    {
+      $push: {
+        "shoppingList.$.measures": {
+          recipeId: body.recipeId,
+          measure: body.measure,
+        },
+      },
     }
   );
 
@@ -26,20 +89,46 @@ async function create(req, res) {
 }
 
 async function deleteById(req, res) {
-  const { _id } = req.user;
-  const { id: ingredientId } = req.params;
+  const { _id: userId } = req.user;
+  const { body } = req;
+
   const response = await User.findOne({
-    _id,
-    shoppingList: { $elemMatch: { ingredientId } },
+    _id: userId,
+    shoppingList: {
+      $elemMatch: {
+        ingredientId: body.ingredientId,
+        measures: {
+          $elemMatch: {
+            recipeId: body.recipeId,
+            measure: body.measure,
+          },
+        },
+      },
+    },
   });
 
   if (!response) {
     throw HttpError(404, "The ingredient in a user's list not found");
   }
 
-  await User.findByIdAndUpdate(_id, {
-    $pull: { shoppingList: { ingredientId } },
-  });
+  await User.updateOne(
+    {
+      _id: userId,
+      shoppingList: {
+        $elemMatch: {
+          ingredientId: body.ingredientId,
+        },
+      },
+    },
+    {
+      $pull: {
+        "shoppingList.$.measures": {
+          recipeId: body.recipeId,
+          measure: body.measure,
+        },
+      },
+    }
+  );
 
   res.json({ message: "The ingredient deleted" });
 }
