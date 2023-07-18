@@ -7,3 +7,5 @@ public/documents/*
 !public/documents/.gitkeep
 public/avatars/*
 !public/avatars/.gitkeep
+temp/*
+!temp/.gitkeep

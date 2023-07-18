@@ -81,48 +81,49 @@ recipeSchema.post("save", handleMongooseError);
 const createOwnRecipeSchema = Joi.object({
   title: Joi.string()
     .min(2)
-    .empty(false)
+    .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "title" })),
-  category: Joi.valid(...categories)
+    .messages(validationMessage({ name: "Title", minStr: 2 })),
+  category: Joi.string()
+    .valid(...categories)
+    .empty()
     .required()
-    .empty(false)
-    .messages(validationMessage({ name: "category" })),
+    .messages(validationMessage({ name: "Category", valid: categories })),
   area: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
-    .messages(validationMessage({ name: "area" })),
+    .messages(validationMessage({ name: "Area" })),
   instructions: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "instructions" })),
+    .messages(validationMessage({ name: "Instructions" })),
   description: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "description" })),
+    .messages(validationMessage({ name: "Description" })),
   thumb: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
-    .messages(validationMessage({ name: "thumb" })),
+    .messages(validationMessage({ name: "Thumb" })),
   preview: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
-    .messages(validationMessage({ name: "preview" })),
+    .messages(validationMessage({ name: "Preview" })),
   time: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "time" })),
+    .messages(validationMessage({ name: "Time" })),
   youtube: Joi.string()
-    .empty(false)
+    .empty()
     .trim()
-    .messages(validationMessage({ name: "youtube" })),
+    .messages(validationMessage({ name: "Youtube" })),
   tags: Joi.array()
-    .items(Joi.string().empty(false).trim())
-    .messages(validationMessage({ name: "tags" })),
+    .items(Joi.string().empty().trim())
+    .messages(validationMessage({ name: "Tags" })),
   ingredients: Joi.array()
     .min(1)
     .items(
@@ -131,39 +132,57 @@ const createOwnRecipeSchema = Joi.object({
           .hex()
           .length(24)
           .required()
-          .messages(validationMessage({ name: "ingredient's id" })),
+          .messages(validationMessage({ name: "Ingredient's id", length: 24 })),
         measure: Joi.string()
-          .required()
-          .empty(false)
+          .min(2)
+          .max(24)
+          .empty()
           .trim()
-          .messages(validationMessage({ name: "measure" })),
+          .required()
+          .messages(
+            validationMessage({ name: "Measure", maxStr: 24, minStr: 2 })
+          ),
       })
     )
     .required()
-    .messages(validationMessage({ name: "ingredients" })),
+    .messages(validationMessage({ name: "Ingredients", minArr: 1 })),
 });
 
 const Recipe = model("recipe", recipeSchema);
 
 const limitMainPageSchema = Joi.object({
-  limit: Joi.number().default(1).valid(1, 2, 4),
+  limit: Joi.number()
+    .default(1)
+    .valid(1, 2, 4)
+    .messages(validationMessage({ name: "Limit", valid: [1, 2, 4] })),
 });
 
 const getByCategoryParamsSchema = Joi.object({
   category: Joi.string()
     .valid(...categories)
     .insensitive()
-    .required(),
+    .required()
+    .messages(
+      validationMessage({ name: "Category as param", valid: categories })
+    ),
 });
 
 const addFavoriteSchema = Joi.object({
-  recipeId: Joi.string().hex().length(24).required(),
+  recipeId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
+    .messages(validationMessage({ name: "RecipeId", length: 24 })),
 });
 
 const getValidateQueryShema = Joi.object({
-  limit: Joi.number().min(1),
-  page: Joi.number().min(1),
-  q: Joi.string(),
+  limit: Joi.number()
+    .min(1)
+    .messages(validationMessage({ name: "'q' query", minNum: 1 })),
+  page: Joi.number()
+    .min(1)
+    .messages(validationMessage({ name: "'q' query", minNum: 1 })),
+  q: Joi.string().messages(validationMessage({ name: "'q' query" })),
 });
 
 const schemas = {
