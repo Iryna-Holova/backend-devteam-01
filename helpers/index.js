@@ -5,7 +5,7 @@ const HttpError = require("./http-error");
 const sendEmail = require("./send-email");
 const upCaseFirstLetter = require("./up-case-first-letter");
 const createVerifyEmail = require("./verify-email");
-const validationMessage = require("./validation-messages");
+const validationMessages = require("./validation-messages");
 
 module.exports = {
   cloudinary,
@@ -15,5 +15,5 @@ module.exports = {
   sendEmail,
   upCaseFirstLetter,
   createVerifyEmail,
-  validationMessage,
+  validationMessages,
 };

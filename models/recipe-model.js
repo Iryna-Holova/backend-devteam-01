@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { handleMongooseError, validationMessage } = require("../helpers");
+const { handleMongooseError, validationMessages } = require("../helpers");
 
 const categories = [
   "Seafood",
@@ -83,47 +83,32 @@ const createOwnRecipeSchema = Joi.object({
     .min(2)
     .empty()
     .trim()
+    .label("title")
     .required()
-    .messages(validationMessage({ name: "title", minStr: 2 })),
+    .messages(validationMessages),
   category: Joi.string()
     .valid(...categories)
     .empty()
     .required()
-    .messages(validationMessage({ name: "category", valid: categories })),
-  area: Joi.string()
-    .empty()
-    .trim()
-    .messages(validationMessage({ name: "area" })),
+    .messages(validationMessages),
+  area: Joi.string().empty().trim().messages(validationMessages),
   instructions: Joi.string()
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "instructions" })),
+    .messages(validationMessages),
   description: Joi.string()
     .empty()
     .trim()
     .required()
-    .messages(validationMessage({ name: "description" })),
-  thumb: Joi.string()
-    .empty()
-    .trim()
-    .messages(validationMessage({ name: "thumb" })),
-  preview: Joi.string()
-    .empty()
-    .trim()
-    .messages(validationMessage({ name: "preview" })),
-  time: Joi.string()
-    .empty()
-    .trim()
-    .required()
-    .messages(validationMessage({ name: "time" })),
-  youtube: Joi.string()
-    .empty()
-    .trim()
-    .messages(validationMessage({ name: "youtube" })),
+    .messages(validationMessages),
+  thumb: Joi.string().empty().trim().messages(validationMessages),
+  preview: Joi.string().empty().trim().messages(validationMessages),
+  time: Joi.string().empty().trim().required().messages(validationMessages),
+  youtube: Joi.string().empty().trim().messages(validationMessages),
   tags: Joi.array()
     .items(Joi.string().empty().trim())
-    .messages(validationMessage({ name: "tags" })),
+    .messages(validationMessages),
   ingredients: Joi.array()
     .min(1)
     .items(
@@ -132,29 +117,23 @@ const createOwnRecipeSchema = Joi.object({
           .hex()
           .length(24)
           .required()
-          .messages(validationMessage({ name: "ingredient's id", length: 24 })),
+          .messages(validationMessages),
         measure: Joi.string()
           .min(2)
           .max(24)
           .empty()
           .trim()
           .required()
-          .messages(
-            validationMessage({ name: "measure", maxStr: 24, minStr: 2 })
-          ),
+          .messages(validationMessages),
       })
     )
     .required()
-    .messages(validationMessage({ name: "ingredients", minArr: 1 })),
+    .messages(validationMessages),
 });
-
 const Recipe = model("recipe", recipeSchema);
 
 const limitMainPageSchema = Joi.object({
-  limit: Joi.number()
-    .default(1)
-    .valid(1, 2, 4)
-    .messages(validationMessage({ name: "limit", valid: [1, 2, 4] })),
+  limit: Joi.number().default(1).valid(1, 2, 4).messages(validationMessages),
 });
 
 const getByCategoryParamsSchema = Joi.object({
@@ -162,9 +141,7 @@ const getByCategoryParamsSchema = Joi.object({
     .valid(...categories)
     .insensitive()
     .required()
-    .messages(
-      validationMessage({ name: "category as param", valid: categories })
-    ),
+    .messages(validationMessages),
 });
 
 const addFavoriteSchema = Joi.object({
@@ -172,17 +149,13 @@ const addFavoriteSchema = Joi.object({
     .hex()
     .length(24)
     .required()
-    .messages(validationMessage({ name: "recipeId", length: 24 })),
+    .messages(validationMessages),
 });
 
 const getValidateQueryShema = Joi.object({
-  limit: Joi.number()
-    .min(1)
-    .messages(validationMessage({ name: "limit", minNum: 1 })),
-  page: Joi.number()
-    .min(1)
-    .messages(validationMessage({ name: "page", minNum: 1 })),
-  q: Joi.string().messages(validationMessage({ name: "'q' query" })),
+  limit: Joi.number().min(1).messages(validationMessages),
+  page: Joi.number().min(1).messages(validationMessages),
+  q: Joi.string().messages(validationMessages),
 });
 
 const schemas = {

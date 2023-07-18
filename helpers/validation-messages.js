@@ -1,27 +1,16 @@
-function validationMessage({
-  name,
-  minStr,
-  length,
-  minArr,
-  maxStr,
-  valid = [],
-  minNum,
-}) {
-  const validString = valid.join(", ");
-  return {
-    "string.empty": `${name} field must be not empty`,
-    "string.base": `${name} field is invalid`,
-    "string.min": `${name} must has at least ${minStr} characters`,
-    "string.max": `${name} must has up to ${maxStr} characters`,
-    "string.length": `${name} must be ${length} characters long`,
-    "string.hex": `${name} must only contain hexadecimal characters`,
-    "string.pattern.base": `${name} should be as user@example.com.`,
-    "number.min": `${name} must be not lower than ${minNum}`,
-    "array.min": `${name} must has at least ${minArr} item`,
-    "array.base": `${name} must be an array`,
-    "any.required": `${name} field is required`,
-    "any.only": `${name} must be one of: ${validString}`,
-  };
-}
+const validationMessages = {
+  "string.empty": "{#label} field must be not empty",
+  "string.base": "{#label} field is invalid",
+  "string.min": "{#label} must has at least {#limit} characters",
+  "string.max": "{#label} must has up to {#limit} characters",
+  "string.length": "{#label}must be {#limit} characters long",
+  "string.hex": "{#label} must only contain hexadecimal characters",
+  "string.pattern.base": "{#label} should be as user@example.com.",
+  "number.min": "{#label} must be not lower than {#limit}",
+  "array.min": "{#label} must contain at least {#limit} item",
+  "array.base": "{#label} must be an array",
+  "any.required": "{#label} field is required",
+  "any.only": "{#label} must be one of {#valids}",
+};
 
-module.exports = validationMessage;
+module.exports = validationMessages;
