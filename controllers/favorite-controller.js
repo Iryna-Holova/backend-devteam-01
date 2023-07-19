@@ -11,7 +11,7 @@ async function getAll(req, res) {
     favorite: { $elemMatch: { _userId: new ObjectId(_id) } },
   };
 
-  const [recipes, total] = await Promise.all([
+  const [{ value: recipes }, { value: total }] = await Promise.allSettled([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);

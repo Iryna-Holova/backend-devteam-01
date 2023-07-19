@@ -8,7 +8,7 @@ async function getOwn(req, res) {
   const { page = 1, limit = 4 } = req.query;
 
   const skip = (page - 1) * limit;
-  const [recipes, total] = await Promise.all([
+  const [{ value: recipes }, { value: total }] = await Promise.allSettled([
     Recipe.find({ owner }, null, { skip, limit }).populate(
       "owner",
       "name email"
@@ -36,29 +36,36 @@ async function create(req, res) {
       throw HttpError(400, "No file uploaded");
     }
 
-    const previewImage = await Jimp.read(tempFilePath);
-    const resizedPreviewImage = previewImage.cover(318, 324);
+    const [previewImage, thumbImage] = await Promise.allSettled([
+      Jimp.read(tempFilePath),
+      Jimp.read(tempFilePath),
+    ]);
+
+    const resizedPreviewImage = previewImage.value.cover(318, 324);
     const previewPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
-    await resizedPreviewImage.writeAsync(previewPhotoPath);
 
-    const previewFileData = await cloudinary.uploader.upload(previewPhotoPath, {
-      folder: "documents",
-    });
+    const resizedThumbImage = thumbImage.value.cover(433, 332);
+    const thumbPhotoPath = `temp/${owner}_${Date.now() + 1000}.jpg`;
 
-    const thumbImage = await Jimp.read(tempFilePath);
-    const resizedThumbImage = thumbImage.cover(433, 332);
-    const thumbPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
-    await resizedThumbImage.writeAsync(thumbPhotoPath);
+    await Promise.allSettled([
+      resizedPreviewImage.writeAsync(previewPhotoPath),
+      resizedThumbImage.writeAsync(thumbPhotoPath),
+    ]);
 
-    const thumbFileData = await cloudinary.uploader.upload(thumbPhotoPath, {
-      folder: "documents",
-    });
+    const [previewFileData, thumbFileData] = await Promise.allSettled([
+      cloudinary.uploader.upload(previewPhotoPath, {
+        folder: "documents",
+      }),
+      cloudinary.uploader.upload(thumbPhotoPath, {
+        folder: "documents",
+      }),
+    ]);
 
     const newRecipe = await Recipe.create({
       ...parsedRecipe,
       owner,
-      preview: previewFileData.secure_url,
-      thumb: thumbFileData.secure_url,
+      preview: previewFileData.value.secure_url,
+      thumb: thumbFileData.value.secure_url,
     });
 
     await fs.unlink(tempFilePath);
