@@ -29,7 +29,7 @@ async function getByName(req, res) {
     },
   };
 
-  const [recipes, total] = await Promise.all([
+  const [{ value: recipes }, { value: total }] = await Promise.allSettled([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
   ]);
