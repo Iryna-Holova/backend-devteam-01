@@ -186,7 +186,7 @@ const updateUserProfile = async (req, res) => {
     const { path: tempFilePath, mimetype } = req.file;
 
     if (!tempFilePath) {
-      throw new HttpError(400, "No file uploaded");
+      throw HttpError(400, "No file uploaded");
     }
 
     const fileData = await cloudinary.uploader.upload(tempFilePath, {

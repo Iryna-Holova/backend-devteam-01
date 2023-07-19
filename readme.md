@@ -242,7 +242,7 @@ The backend application uses the following data models:
 ```
 ### API Versioning
 
-The API currently has one version:
+The API currently has one version.
 
 ### Version 1.0 (Current).
 
@@ -252,4 +252,3 @@ For any questions or support, please contact us at support@so-yummy.com.
 ### License and Terms of Use
 
 The Bookstore Backend API is provided under the MIT License. By using the API, you agree to adhere to the terms and conditions outlined in the license.
-`````

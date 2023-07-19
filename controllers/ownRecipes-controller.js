@@ -29,7 +29,7 @@ async function create(req, res) {
     const { path: tempFilePath } = req.file;
 
     if (!tempFilePath) {
-      throw new HttpError(400, "No file uploaded");
+      throw HttpError(400, "No file uploaded");
     }
 
     const previewImage = await Jimp.read(tempFilePath);
@@ -63,7 +63,7 @@ async function create(req, res) {
 
     res.status(201).json(newRecipe);
   } else {
-    throw new HttpError(400, "No file uploaded");
+    throw HttpError(400, "No file uploaded");
   }
 }
 
