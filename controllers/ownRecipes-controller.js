@@ -33,7 +33,7 @@ async function create(req, res) {
     }
 
     const previewImage = await Jimp.read(tempFilePath);
-    const resizedPreviewImage = previewImage.resize(318, 324).quality(80);
+    const resizedPreviewImage = previewImage.cover(318, 324)
     const previewPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
     await resizedPreviewImage.writeAsync(previewPhotoPath);
 
@@ -42,7 +42,7 @@ async function create(req, res) {
     });
 
     const thumbImage = await Jimp.read(tempFilePath);
-    const resizedThumbImage = thumbImage.resize(433, 332).quality(80);
+    const resizedThumbImage = thumbImage.cover(433, 332)
     const thumbPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
     await resizedThumbImage.writeAsync(thumbPhotoPath);
 
