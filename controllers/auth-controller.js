@@ -133,11 +133,11 @@ const login = async (req, res) => {
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
-	}
+  }
 
   const payload = { id: user.id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-	await User.findByIdAndUpdate(user._id, { token });
+  await User.findByIdAndUpdate(user._id, { token });
 
   res.json({
     token,
@@ -178,41 +178,38 @@ const updateUserProfile = async (req, res) => {
 
   let updatedUser = {};
 
+  if (!name && !req.file) {
+    throw HttpError(400, "There must be at least 1 field to update");
+  }
+
   if (name) {
     updatedUser = await User.findByIdAndUpdate(_id, { name }, { new: true });
   }
 
   if (req.file) {
-    const { path: tempFilePath, mimetype } = req.file;
+    const { path: tempFilePath } = req.file;
 
     if (!tempFilePath) {
       throw HttpError(400, "No file uploaded");
     }
 
-    const fileData = await cloudinary.uploader.upload(tempFilePath, {
+    const avatar = await Jimp.read(tempFilePath);
+    const resizedAvatar = avatar.cover(250, 250);
+    const avatarPath = `temp/${_id}_${Date.now()}.jpg`;
+    await resizedAvatar.writeAsync(avatarPath);
+
+    const avatarFileData = cloudinary.uploader.upload(avatarPath, {
       folder: "avatars",
     });
 
-    await fs.unlink(tempFilePath);
-
-    const image = await Jimp.read(fileData.secure_url);
-    image.resize(250, 250).quality(80);
-
-    const processedAvatarPath = `temp/${_id}_avatar.jpg`;
-    await image.writeAsync(processedAvatarPath);
-
-    const uniqueFilename = `${_id}_${Date.now()}${mimetype.replace(
-      "image/",
-      "."
-    )}`;
-    const avatarPath = `public/avatars/${uniqueFilename}`;
-    await fs.rename(processedAvatarPath, avatarPath);
-
     updatedUser = await User.findByIdAndUpdate(
       _id,
-      { avatarURL: `/avatars/${uniqueFilename}` },
+      { avatarURL: (await avatarFileData).secure_url },
       { new: true }
     );
+
+    await fs.unlink(tempFilePath);
+    await fs.unlink(avatarPath);
   }
 
   res.json({
