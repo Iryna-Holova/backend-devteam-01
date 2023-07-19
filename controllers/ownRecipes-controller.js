@@ -24,42 +24,42 @@ async function create(req, res) {
   const { body } = req;
   const { _id: owner } = req.user;
   const parsedRecipe = JSON.parse(body.recipe);
-  const recipe = await Recipe.findOne({ title: parsedRecipe.title });
-
-  if (recipe) {
-    throw HttpError(400, "The name of the recipe in use");
-  }
 
   if (req.file) {
-    const { path: tempFilePath, mimetype } = req.file;
+    const { path: tempFilePath } = req.file;
 
     if (!tempFilePath) {
       throw new HttpError(400, "No file uploaded");
     }
 
-    const fileData = await cloudinary.uploader.upload(tempFilePath, {
+    const previewImage = await Jimp.read(tempFilePath);
+    const resizedPreviewImage = previewImage.resize(318, 324).quality(80);
+    const previewPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
+    await resizedPreviewImage.writeAsync(previewPhotoPath);
+
+    const previewFileData = await cloudinary.uploader.upload(previewPhotoPath, {
       folder: "documents",
     });
 
-    await fs.unlink(tempFilePath);
+    const thumbImage = await Jimp.read(tempFilePath);
+    const resizedThumbImage = thumbImage.resize(433, 332).quality(80);
+    const thumbPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
+    await resizedThumbImage.writeAsync(thumbPhotoPath);
 
-    const image = await Jimp.read(fileData.secure_url);
-    image.resize(250, 250).quality(80);
-
-    const processedRecipesPhotoPath = `temp/${parsedRecipe.title}_recipe.jpg`;
-    await image.writeAsync(processedRecipesPhotoPath);
-
-    const uniqueFilename = `${
-      parsedRecipe.title
-    }_${Date.now()}${mimetype.replace("image/", ".")}`;
-    const recipePhotoPath = `public/documents/${uniqueFilename}`;
-    await fs.rename(processedRecipesPhotoPath, recipePhotoPath);
+    const thumbFileData = await cloudinary.uploader.upload(thumbPhotoPath, {
+      folder: "documents",
+    });
 
     const newRecipe = await Recipe.create({
       ...parsedRecipe,
       owner,
-      thumb: `/documents/${uniqueFilename}`,
+      preview: previewFileData.secure_url,
+      thumb: thumbFileData.secure_url,
     });
+
+    await fs.unlink(tempFilePath);
+    await fs.unlink(thumbPhotoPath);
+    await fs.unlink(previewPhotoPath);
 
     res.status(201).json(newRecipe);
   } else {

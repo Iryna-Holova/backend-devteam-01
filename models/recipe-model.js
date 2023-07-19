@@ -26,7 +26,6 @@ const recipeSchema = new Schema(
       type: String,
       minlength: [2, "Title must contain at least 2 characters"],
       required: [true, "Title is required"],
-      unique: true,
       trim: true,
     },
     category: {
@@ -83,7 +82,6 @@ const createOwnRecipeSchema = Joi.object({
     .min(2)
     .empty()
     .trim()
-    .label("title")
     .required()
     .messages(validationMessages),
   category: Joi.string()
