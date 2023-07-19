@@ -17,36 +17,38 @@ async function getAll(req, res) {
 
 async function create(req, res) {
   const { _id: userId } = req.user;
-  const { body } = req;
+  const {
+    body: { recipeId, ingredientId, measure },
+  } = req;
 
-  const recipe = await Recipe.findById(body.recipeId);
+  const recipe = await Recipe.findById(recipeId);
 
   if (!recipe) {
     throw HttpError(404, "The recipe not found");
   }
 
-  const ingredient = await Ingredient.findById(body.ingredientId);
+  const ingredient = await Ingredient.findById(ingredientId);
 
   if (!ingredient) {
     throw HttpError(404, "The ingredient not found");
   }
 
-  const ingredientInList = await User.findOne({
+  const isIngredientInList = await User.findOne({
     _id: userId,
-    shoppingList: { $elemMatch: { ingredientId: body.ingredientId } },
+    shoppingList: { $elemMatch: { ingredientId } },
   });
 
-  if (!ingredientInList) {
+  if (!isIngredientInList) {
     await User.findByIdAndUpdate(
       userId,
       {
         $push: {
           shoppingList: {
-            ingredientId: body.ingredientId,
+            ingredientId,
             measures: [
               {
-                recipeId: body.recipeId,
-                measure: body.measure,
+                recipeId,
+                measure,
               },
             ],
           },
@@ -65,11 +67,11 @@ async function create(req, res) {
     _id: userId,
     shoppingList: {
       $elemMatch: {
-        ingredientId: body.ingredientId,
+        ingredientId,
         measures: {
           $elemMatch: {
-            recipeId: body.recipeId,
-            measure: body.measure,
+            recipeId,
+            measure,
           },
         },
       },
@@ -83,22 +85,25 @@ async function create(req, res) {
     );
   }
 
-  await User.updateOne(
+  await User.findOneAndUpdate(
     {
       _id: userId,
       shoppingList: {
         $elemMatch: {
-          ingredientId: body.ingredientId,
+          ingredientId,
         },
       },
     },
     {
       $push: {
         "shoppingList.$.measures": {
-          recipeId: body.recipeId,
-          measure: body.measure,
+          recipeId,
+          measure,
         },
       },
+    },
+    {
+      new: true,
     }
   );
 
@@ -107,48 +112,70 @@ async function create(req, res) {
 
 async function deleteById(req, res) {
   const { _id: userId } = req.user;
-  const { body } = req;
+  const {
+    body: { ingredientId, recipeId, measure },
+  } = req;
 
-  const response = await User.findOne({
-    _id: userId,
-    shoppingList: {
-      $elemMatch: {
-        ingredientId: body.ingredientId,
-        measures: {
-          $elemMatch: {
-            recipeId: body.recipeId,
-            measure: body.measure,
-          },
-        },
-      },
-    },
-  });
-
-  if (!response) {
-    throw HttpError(
-      404,
-      "The ingredient in a user's list is not found with such a measure"
-    );
-  }
-
-  await User.updateOne(
+  const updatedUser = await User.findOneAndUpdate(
     {
       _id: userId,
       shoppingList: {
         $elemMatch: {
-          ingredientId: body.ingredientId,
+          ingredientId: ingredientId,
+          measures: {
+            $elemMatch: {
+              recipeId: recipeId,
+              measure: measure,
+            },
+          },
         },
       },
     },
     {
       $pull: {
         "shoppingList.$.measures": {
-          recipeId: body.recipeId,
-          measure: body.measure,
+          recipeId: recipeId,
+          measure: measure,
         },
       },
+    },
+    {
+      new: true,
     }
   );
+
+  if (!updatedUser) {
+    throw HttpError(
+      404,
+      "The ingredient in a user's list is not found with such a measure"
+    );
+  }
+
+  const [ingredientObject] = updatedUser.shoppingList.filter((shoppingList) => {
+    if (shoppingList.ingredientId.toHexString() === ingredientId) {
+      return shoppingList.measures;
+    }
+    return false;
+  });
+
+  if (ingredientObject.measures.length === 0) {
+    await User.findOneAndUpdate(
+      {
+        _id: userId,
+        shoppingList: {
+          $elemMatch: {
+            ingredientId: ingredientId,
+          },
+        },
+      },
+      {
+        $pull: { shoppingList: { ingredientId: ingredientId } },
+      },
+      {
+        new: true,
+      }
+    );
+  }
 
   res.json({ message: "The ingredient deleted" });
 }
