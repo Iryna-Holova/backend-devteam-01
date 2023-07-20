@@ -43,8 +43,7 @@ const createSchema = Joi.object({
     .messages(validationMessages),
   measure: Joi.string()
     .empty()
-    .min(2)
-    .max(24)
+    .min(1)
     .trim()
     .messages(validationMessages),
 });
