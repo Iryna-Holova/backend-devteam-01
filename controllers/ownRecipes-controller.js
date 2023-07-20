@@ -9,10 +9,9 @@ async function getOwn(req, res) {
 
   const skip = (page - 1) * limit;
   const [{ value: recipes }, { value: total }] = await Promise.allSettled([
-    Recipe.find({ owner }, null, { skip, limit }).populate(
-      "owner",
-      "name email"
-    ),
+    Recipe.find({ owner }, null, { skip, limit })
+      .sort({ createdAt: "desc" })
+      .populate("owner", "name email"),
     Recipe.countDocuments({ owner }),
   ]);
   const pages = Math.ceil(total / limit);
