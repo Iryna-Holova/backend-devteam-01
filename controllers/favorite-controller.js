@@ -14,12 +14,8 @@ async function getAll(req, res) {
   const [{ value: recipes }, { value: total }] = await Promise.allSettled([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
-  ]);
-
-  if (total === 0) {
-    throw HttpError(404, `There are no favorite recipes`);
-  }
-
+	]);
+	
   const pages = Math.ceil(total / limit);
 
   res.json({ total, pages, recipes });
