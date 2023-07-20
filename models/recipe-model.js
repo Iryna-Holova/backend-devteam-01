@@ -117,8 +117,7 @@ const createOwnRecipeSchema = Joi.object({
           .required()
           .messages(validationMessages),
         measure: Joi.string()
-          .min(2)
-          .max(24)
+          .min(1)
           .empty()
           .trim()
           .required()

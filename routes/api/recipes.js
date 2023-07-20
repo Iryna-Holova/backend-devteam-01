@@ -230,6 +230,14 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 message:
+ *                   example: There are no own recipes
  *       500:
  *         content:
  *           application/json:
@@ -277,7 +285,7 @@ router.post(
  *             schema:
  *               properties:
  *                 message:
- *                   example: The name of the recipe in use
+ *                   example: No file uploaded
  *       500:
  *         content:
  *           application/json:
@@ -319,7 +327,7 @@ router.delete("/own/:id", authenticate, validateId, ctrlOwnRecipes.deleteById);
  *             schema:
  *               properties:
  *                 message:
- *                   example: The recipe not found
+ *                   example: The ingredient in a user's list is not found with such a measure
  *       500:
  *         content:
  *           application/json:
