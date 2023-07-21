@@ -188,8 +188,10 @@ const updateUserProfile = async (req, res) => {
 
   if (req.file) {
     const { path: tempFilePath, mimetype } = req.file;
-
-    if (mimetype === "image/webp") {
+    console.log(mimetype);
+    if (
+      !["image/bmp", "image/jpeg", "image/png", "image/jpg"].includes(mimetype)
+    ) {
       throw HttpError(400, "Format of the image must me JPEG, PNG, BMP");
     }
 

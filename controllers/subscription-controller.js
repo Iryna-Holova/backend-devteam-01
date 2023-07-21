@@ -27,7 +27,6 @@ const sendSubscriptionEmail = async (req, res, next) => {
       { $push: { emails: email } },
       {
         new: true,
-        runValidators: true,
       }
     );
   }
