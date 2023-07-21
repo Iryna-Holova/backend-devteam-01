@@ -9,10 +9,9 @@ async function getOwn(req, res) {
 
   const skip = (page - 1) * limit;
   const [{ value: recipes }, { value: total }] = await Promise.allSettled([
-    Recipe.find({ owner }, null, { skip, limit }).populate(
-      "owner",
-      "name email"
-    ),
+    Recipe.find({ owner }, null, { skip, limit })
+      .sort({ createdAt: "desc" })
+      .populate("owner", "name email"),
     Recipe.countDocuments({ owner }),
   ]);
   const pages = Math.ceil(total / limit);
@@ -30,7 +29,13 @@ async function create(req, res) {
   const parsedRecipe = JSON.parse(body.recipe);
 
   if (req.file) {
-    const { path: tempFilePath } = req.file;
+    const { path: tempFilePath, mimetype } = req.file;
+
+    if (
+      !["image/bmp", "image/jpeg", "image/png", "image/jpg"].includes(mimetype)
+    ) {
+      throw HttpError(400, "Format of the image must me JPEG, PNG or BMP");
+    }
 
     if (!tempFilePath) {
       throw HttpError(400, "No file uploaded");
@@ -45,7 +50,7 @@ async function create(req, res) {
     const previewPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
 
     const resizedThumbImage = thumbImage.value.cover(433, 332);
-    const thumbPhotoPath = `temp/${owner}_${Date.now() + 1000}.jpg`;
+    const thumbPhotoPath = `temp/${owner}_${Date.now()}.jpg`;
 
     await Promise.allSettled([
       resizedPreviewImage.writeAsync(previewPhotoPath),

@@ -8,7 +8,7 @@
  *         name:
  *           type: string
  *           description: User's new name
- *         file:
+ *         avatar:
  *           type: string
  *           format: binary
  *           description: User's profile photo

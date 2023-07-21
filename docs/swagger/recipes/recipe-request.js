@@ -58,7 +58,7 @@
  *                   type: string
  *                   description: The amount of ingredient
  *               description: Ingredients' array
- *         file:
+ *         photo:
  *           type: string
  *           format: binary
  *           description: User's profile photo

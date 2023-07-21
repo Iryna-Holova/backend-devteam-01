@@ -285,7 +285,7 @@ router.post(
  *             schema:
  *               properties:
  *                 message:
- *                   example: No file uploaded
+ *                   example: No file uploaded / Format of the image must me JPEG, PNG, BMP
  *       500:
  *         content:
  *           application/json:
