@@ -187,7 +187,11 @@ const updateUserProfile = async (req, res) => {
   }
 
   if (req.file) {
-    const { path: tempFilePath } = req.file;
+    const { path: tempFilePath, mimetype } = req.file;
+
+    if (mimetype === "image/webp") {
+      throw HttpError(400, "Format of the image must me JPEG, PNG, BMP");
+    }
 
     if (!tempFilePath) {
       throw HttpError(400, "No file uploaded");
@@ -204,7 +208,7 @@ const updateUserProfile = async (req, res) => {
 
     updatedUser = await User.findByIdAndUpdate(
       _id,
-      { avatarURL: (await avatarFileData).secure_url },
+      { avatarURL: avatarFileData.secure_url },
       { new: true }
     );
 
