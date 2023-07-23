@@ -214,8 +214,14 @@ const updateUserProfile = async (req, res) => {
       { new: true }
     );
 
-    await fs.unlink(tempFilePath);
-    await fs.unlink(avatarPath);
+    await Promise.allSettled([
+      fs.unlink(tempFilePath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(avatarPath, function (err) {
+        if (err) console.log(err);
+      }),
+    ]);
   }
 
   res.json({

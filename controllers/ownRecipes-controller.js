@@ -69,9 +69,17 @@ async function create(req, res) {
       thumb: thumbFileData.value.secure_url,
     });
 
-    await fs.unlink(tempFilePath);
-    await fs.unlink(thumbPhotoPath);
-    await fs.unlink(previewPhotoPath);
+    await Promise.allSettled([
+      fs.unlink(tempFilePath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(thumbPhotoPath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(previewPhotoPath, function (err) {
+        if (err) console.log(err);
+      }),
+    ]);
 
     res.status(201).json(newRecipe);
   } else {
