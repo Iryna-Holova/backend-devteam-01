@@ -14,8 +14,9 @@ const getMainPage = async (req, res) => {
   arrayOfMainPagePromises.push(Recipe.find({ category: "Chicken" }).sort({ _id: -1 }).limit(limit));
   arrayOfMainPagePromises.push(Recipe.find({ category: "Dessert" }).sort({ _id: -1 }).limit(limit));
 
-  const [Breakfast, Miscellaneous, Chicken, Desserts] =
-    await Promise.allSettled(arrayOfMainPagePromises);
+  const [Breakfast, Miscellaneous, Chicken, Desserts] = await Promise.allSettled(
+    arrayOfMainPagePromises
+  );
   const result = {
     Breakfast: Breakfast.value,
     Miscellaneous: Miscellaneous.value,
@@ -51,19 +52,19 @@ const getRecipeById = async (req, res) => {
   const recipe = await Recipe.findById(id).populate("ingredients.id");
 
   if (!recipe) {
-    res.json({});
-    return;
+    return res.json({});
   } else {
     const obj = { ...recipe._doc };
     obj.ingredients = [
       ...recipe.ingredients.map(item => {
         const { id, img, name, desc } = item.id;
         const tmp = { id, name, desc, img, mesure: item.measure };
-      return tmp;
-    }),
-  ];
+        return tmp;
+      }),
+    ];
 
-  res.json(obj);
+    res.json(obj);
+  }
 };
 
 const getSearchByName = async (req, res) => {
