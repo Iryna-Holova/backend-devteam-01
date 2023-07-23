@@ -16,10 +16,6 @@ async function getOwn(req, res) {
   ]);
   const pages = Math.ceil(total / limit);
 
-  if (total === 0) {
-    throw HttpError(404, `There are no own recipes`);
-  }
-
   res.json({ total, pages, recipes });
 }
 
