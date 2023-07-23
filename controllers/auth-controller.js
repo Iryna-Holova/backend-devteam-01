@@ -188,7 +188,7 @@ const updateUserProfile = async (req, res) => {
 
   if (req.file) {
     const { path: tempFilePath, mimetype } = req.file;
-    console.log(mimetype);
+
     if (
       !["image/bmp", "image/jpeg", "image/png", "image/jpg"].includes(mimetype)
     ) {
@@ -204,7 +204,7 @@ const updateUserProfile = async (req, res) => {
     const avatarPath = `temp/${_id}_${Date.now()}.jpg`;
     await resizedAvatar.writeAsync(avatarPath);
 
-    const avatarFileData = cloudinary.uploader.upload(avatarPath, {
+    const avatarFileData = await cloudinary.uploader.upload(avatarPath, {
       folder: "avatars",
     });
 
@@ -214,8 +214,14 @@ const updateUserProfile = async (req, res) => {
       { new: true }
     );
 
-    await fs.unlink(tempFilePath);
-    await fs.unlink(avatarPath);
+    await Promise.allSettled([
+      fs.unlink(tempFilePath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(avatarPath, function (err) {
+        if (err) console.log(err);
+      }),
+    ]);
   }
 
   res.json({

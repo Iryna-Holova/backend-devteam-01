@@ -16,10 +16,6 @@ async function getAll(req, res) {
     Recipe.countDocuments(searchFilter),
   ]);
 
-  if (total === 0) {
-    throw HttpError(404, `There are no favorite recipes`);
-  }
-
   const pages = Math.ceil(total / limit);
 
   res.json({ total, pages, recipes });

@@ -12,10 +12,6 @@ async function getAll(req, res) {
       select: "title description thumb",
     });
 
-  if (shoppingList.length === 0) {
-    throw HttpError(404, `There are no ingredients to buy`);
-  }
-
   res.json(shoppingList);
 }
 

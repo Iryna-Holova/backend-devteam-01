@@ -64,14 +64,6 @@ router.get("/", validateQuery(schemas.getValidateQueryShema), ctrl.getByName);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: The recipe not found with name
  *       500:
  *         content:
  *           application/json:

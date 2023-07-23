@@ -16,10 +16,6 @@ async function getOwn(req, res) {
   ]);
   const pages = Math.ceil(total / limit);
 
-  if (total === 0) {
-    throw HttpError(404, `There are no own recipes`);
-  }
-
   res.json({ total, pages, recipes });
 }
 
@@ -73,9 +69,17 @@ async function create(req, res) {
       thumb: thumbFileData.value.secure_url,
     });
 
-    await fs.unlink(tempFilePath);
-    await fs.unlink(thumbPhotoPath);
-    await fs.unlink(previewPhotoPath);
+    await Promise.allSettled([
+      fs.unlink(tempFilePath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(thumbPhotoPath, function (err) {
+        if (err) console.log(err);
+      }),
+      fs.unlink(previewPhotoPath, function (err) {
+        if (err) console.log(err);
+      }),
+    ]);
 
     res.status(201).json(newRecipe);
   } else {
