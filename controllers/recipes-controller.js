@@ -56,6 +56,10 @@ const getRecipeById = async (req, res) => {
 
   const response = await Recipe.findById(id).populate("ingredients.id");
 
+  if (!response) {
+    res.json({});
+  }
+
   const obj = { ...response._doc };
   obj.ingredients = [
     ...response.ingredients.map((item) => {
