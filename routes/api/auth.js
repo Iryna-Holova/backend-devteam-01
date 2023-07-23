@@ -264,7 +264,7 @@ router.patch(
  *             schema:
  *               properties:
  *                 message:
- *                   example: No file uploaded / There must be at least 1 field to update
+ *                   example: No file uploaded / There must be at least 1 field to update / Format of the image must me JPEG, PNG, BMP
  *       500:
  *         content:
  *           application/json:
