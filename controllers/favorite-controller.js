@@ -14,8 +14,8 @@ async function getAll(req, res) {
   const [{ value: recipes }, { value: total }] = await Promise.allSettled([
     Recipe.find(searchFilter, null, { skip, limit }),
     Recipe.countDocuments(searchFilter),
-	]);
-	
+  ]);
+
   const pages = Math.ceil(total / limit);
 
   res.json({ total, pages, recipes });

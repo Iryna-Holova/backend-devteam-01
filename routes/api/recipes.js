@@ -56,14 +56,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: No recipes found by the title
  *       500:
  *         content:
  *           application/json:
@@ -179,14 +171,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: No recipe found in the category
  *       500:
  *         content:
  *           application/json:
@@ -230,14 +214,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: There are no own recipes
  *       500:
  *         content:
  *           application/json:
@@ -371,14 +347,6 @@ router.get(
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/PaginatedRecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: There are no favorite recipes
  *       500:
  *         content:
  *           application/json:
@@ -542,14 +510,6 @@ router.get("/:id", validateId, ctrlRecipes.getRecipeById);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/RecipeResponse'
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               properties:
- *                 message:
- *                   example: No recipe found with id
  *       500:
  *         content:
  *           application/json:
