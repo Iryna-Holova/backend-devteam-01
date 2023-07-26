@@ -147,35 +147,26 @@ async function deleteById(req, res) {
   if (!updatedUser) {
     throw HttpError(
       404,
-      "The ingredient in a user's list is not found with such a measure"
+      "The ingredient is not found with such a measure in the user's list"
     );
   }
 
-  const [ingredientObject] = updatedUser.shoppingList.filter((shoppingList) => {
-    if (shoppingList.ingredientId.toHexString() === ingredientId) {
-      return shoppingList.measures;
-    }
-    return false;
-  });
-
-  if (ingredientObject.measures.length === 0) {
-    await User.findOneAndUpdate(
-      {
-        _id: userId,
+  await User.findOneAndUpdate(
+    {
+      _id: userId,
+      "shoppingList.measures": { $size: 0 },
+    },
+    {
+      $pull: {
         shoppingList: {
-          $elemMatch: {
-            ingredientId: ingredientId,
-          },
+          measures: { $size: 0 },
         },
       },
-      {
-        $pull: { shoppingList: { ingredientId: ingredientId } },
-      },
-      {
-        new: true,
-      }
-    );
-  }
+    },
+    {
+      new: true,
+    }
+  );
 
   res.json({ message: "The ingredient deleted" });
 }

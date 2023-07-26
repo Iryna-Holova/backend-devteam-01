@@ -124,7 +124,7 @@ router.delete(
  *             schema:
  *               properties:
  *                 message:
- *                   example: The ingredient in a user's list is not found with such a measure
+ *                   example: The ingredient is not found with such a measure in a user's list
  *       500:
  *         content:
  *           application/json:

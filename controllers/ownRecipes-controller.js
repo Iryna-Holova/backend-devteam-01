@@ -1,7 +1,8 @@
-const { Recipe } = require("../models/recipe-model");
 const fs = require("fs/promises");
 const { ctrlWrapper, HttpError, cloudinary } = require("../helpers");
 const Jimp = require("jimp");
+const { Recipe } = require("../models/recipe-model");
+const { User } = require("../models/user-model");
 
 async function getOwn(req, res) {
   const { _id: owner } = req.user;
@@ -88,12 +89,55 @@ async function create(req, res) {
 }
 
 async function deleteById(req, res) {
-  const { id } = req.params;
-  const response = await Recipe.findByIdAndRemove({ _id: id });
+  const { id: recipeId } = req.params;
+  const { _id: userId } = req.user;
+  const response = await Recipe.findByIdAndRemove({ _id: recipeId });
 
   if (!response) {
     throw HttpError(404, "The recipe not found");
   }
+
+  await User.findOneAndUpdate(
+    {
+      _id: userId,
+      shoppingList: {
+        $elemMatch: {
+          measures: {
+            $elemMatch: {
+              recipeId: recipeId,
+            },
+          },
+        },
+      },
+    },
+    {
+      $pull: {
+        "shoppingList.$[].measures": {
+          recipeId: recipeId,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  await User.findOneAndUpdate(
+    {
+      _id: userId,
+      "shoppingList.measures": { $size: 0 },
+    },
+    {
+      $pull: {
+        shoppingList: {
+          measures: { $size: 0 },
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
 
   res.json({ message: "The recipe deleted" });
 }
