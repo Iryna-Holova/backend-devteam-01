@@ -14,14 +14,14 @@ const getMainPage = async (req, res) => {
   arrayOfMainPagePromises.push(Recipe.find({ category: "Chicken" }).sort({ _id: -1 }).limit(limit));
   arrayOfMainPagePromises.push(Recipe.find({ category: "Dessert" }).sort({ _id: -1 }).limit(limit));
 
-  const [Breakfast, Miscellaneous, Chicken, Desserts] = await Promise.allSettled(
+  const [Breakfast, Miscellaneous, Chicken, Dessert] = await Promise.allSettled(
     arrayOfMainPagePromises
   );
   const result = {
     Breakfast: Breakfast.value,
     Miscellaneous: Miscellaneous.value,
     Chicken: Chicken.value,
-    Desserts: Desserts.value,
+    Dessert: Dessert.value,
   };
 
   res.json(result);
