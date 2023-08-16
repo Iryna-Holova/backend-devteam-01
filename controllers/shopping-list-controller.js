@@ -172,7 +172,7 @@ async function addAllInRecipe(req, res) {
   const { ingredients } = await Recipe.findById(recipeId, "ingredients");
   const { shoppingList } = await User.findById(userId);
 
-  console.log(ingredients);
+  //console.log(ingredients);
 
   // Проверяем наличие ингредиентов в shoppingList в списке ингредиентов рецепта. Если есть, проверяем наличие рецепта в measures.
   // Если нет, добавляем и удаляем из списка ингредиентов.
@@ -180,10 +180,10 @@ async function addAllInRecipe(req, res) {
     const index = ingredients.findIndex(
       ingredient => ingredient.id === current.ingredientId.toString()
     );
-    console.log(index);
+    //console.log(index);
     if (index < 0) return [...shoppingList, current];
     else {
-      console.log(recipeId, current.measures);
+      //console.log(recipeId, current.measures);
       const recipeIndex = current.measures.findIndex(
         measure => measure.recipeId.toString() === recipeId
       );
