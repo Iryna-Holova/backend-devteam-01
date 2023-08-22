@@ -172,18 +172,14 @@ async function addAllInRecipe(req, res) {
   const { ingredients } = await Recipe.findById(recipeId, "ingredients");
   const { shoppingList } = await User.findById(userId);
 
-  //console.log(ingredients);
-
   // Проверяем наличие ингредиентов в shoppingList в списке ингредиентов рецепта. Если есть, проверяем наличие рецепта в measures.
   // Если нет, добавляем и удаляем из списка ингредиентов.
-  const shoppingListNew = shoppingList.reduce((shoppingList, current) => {
+  const shoppingListNew = shoppingList.reduce((shoppingListReduced, current) => {
     const index = ingredients.findIndex(
       ingredient => ingredient.id === current.ingredientId.toString()
     );
-    //console.log(index);
-    if (index < 0) return [...shoppingList, current];
+    if (index < 0) return [...shoppingListReduced, current];
     else {
-      //console.log(recipeId, current.measures);
       const recipeIndex = current.measures.findIndex(
         measure => measure.recipeId.toString() === recipeId
       );
@@ -191,7 +187,7 @@ async function addAllInRecipe(req, res) {
         current.measures.push({ recipeId, measure: ingredients[index].measure });
       }
       ingredients.splice(index, 1);
-      return [...shoppingList, current];
+      return [...shoppingListReduced, current];
     }
   }, []);
 
@@ -204,20 +200,67 @@ async function addAllInRecipe(req, res) {
       });
     });
 
-  await User.findOneAndUpdate(
+  const { shoppingList: result } = await User.findOneAndUpdate(
     { _id: userId },
     { shoppingList: [...shoppingListNew] },
     {
       new: true,
     }
-  );
+  )
+    .populate("shoppingList.ingredientId")
+    .populate({
+      path: "shoppingList.measures.recipeId",
+      select: "title description thumb",
+    });
 
-  res.json(shoppingListNew);
+  res.json({ message: "All ingredients added", shoppingList: result });
 }
 
 async function delAllInRecipe(req, res) {
-  console.log(req.params);
-  res.json(req.params);
+  const { _id: userId } = req.user;
+  const { id: recipeId } = req.params;
+
+  const { ingredients } = await Recipe.findById(recipeId, "ingredients");
+  const [{ shoppingList = [] } = { shoppingList: [] }] = await User.find(
+    {
+      _id: userId,
+    },
+
+    "shoppingList"
+  );
+
+  if (shoppingList.length !== 0) {
+    ingredients.forEach(ingredient => {
+      const index = shoppingList.findIndex(
+        slIngredient => slIngredient.ingredientId.toString() === ingredient.id
+      );
+
+      if (index >= 0) {
+        const measures = shoppingList[index].measures.filter(
+          measure => measure.recipeId.toString() !== recipeId
+        );
+        console.log(ingredient.id, measures.length, shoppingList[index].measures.length);
+        if (measures.length > 0) {
+          shoppingList[index].measures = [...measures];
+        } else shoppingList.splice(index, 1);
+      }
+    });
+  } else return res.json({ message: "Shopping list is empty.", shoppingList });
+
+  const { shoppingList: result } = await User.findOneAndUpdate(
+    { _id: userId },
+    { shoppingList: [...shoppingList] },
+    {
+      new: true,
+    }
+  )
+    .populate("shoppingList.ingredientId")
+    .populate({
+      path: "shoppingList.measures.recipeId",
+      select: "title description thumb",
+    });
+
+  res.json({ message: "Ingredients removed", shoppingList: result });
 }
 
 async function clear(req, res) {
