@@ -79,10 +79,7 @@ async function create(req, res) {
   });
 
   if (isRecipeMeasureDoubled) {
-    throw HttpError(
-      400,
-      "The ingredient in a user's list from the recipe is already added"
-    );
+    throw HttpError(400, "The ingredient in a user's list from the recipe is already added");
   }
 
   await User.findOneAndUpdate(
@@ -145,10 +142,7 @@ async function deleteById(req, res) {
   );
 
   if (!updatedUser) {
-    throw HttpError(
-      404,
-      "The ingredient is not found with such a measure in the user's list"
-    );
+    throw HttpError(404, "The ingredient is not found with such a measure in the user's list");
   }
 
   await User.findOneAndUpdate(
@@ -171,8 +165,123 @@ async function deleteById(req, res) {
   res.json({ message: "The ingredient deleted" });
 }
 
+async function addAllInRecipe(req, res) {
+  const { _id: userId } = req.user;
+  const { id: recipeId } = req.params;
+
+  const { ingredients } = await Recipe.findById(recipeId, "ingredients");
+  const { shoppingList } = await User.findById(userId);
+
+  // Проверяем наличие ингредиентов в shoppingList в списке ингредиентов рецепта. Если есть, проверяем наличие рецепта в measures.
+  // Если нет, добавляем и удаляем из списка ингредиентов.
+  const shoppingListNew = shoppingList.reduce((shoppingListReduced, current) => {
+    const index = ingredients.findIndex(
+      ingredient => ingredient.id === current.ingredientId.toString()
+    );
+    if (index < 0) return [...shoppingListReduced, current];
+    else {
+      const recipeIndex = current.measures.findIndex(
+        measure => measure.recipeId.toString() === recipeId
+      );
+      if (recipeIndex < 0) {
+        current.measures.push({ recipeId, measure: ingredients[index].measure });
+      }
+      ingredients.splice(index, 1);
+      return [...shoppingListReduced, current];
+    }
+  }, []);
+
+  //Добавляем оставшиеся ингредиенты в shoppingList
+  if (ingredients.length > 0)
+    ingredients.forEach(ingredient => {
+      shoppingListNew.push({
+        ingredientId: ingredient.id,
+        measures: [{ recipeId, measure: ingredient.measure }],
+      });
+    });
+
+  const { shoppingList: result } = await User.findOneAndUpdate(
+    { _id: userId },
+    { shoppingList: [...shoppingListNew] },
+    {
+      new: true,
+    }
+  )
+    .populate("shoppingList.ingredientId")
+    .populate({
+      path: "shoppingList.measures.recipeId",
+      select: "title description thumb",
+    });
+
+  res.json({ message: "All ingredients added", shoppingList: result });
+}
+
+async function delAllInRecipe(req, res) {
+  const { _id: userId } = req.user;
+  const { id: recipeId } = req.params;
+
+  const { ingredients } = await Recipe.findById(recipeId, "ingredients");
+  const [{ shoppingList = [] } = { shoppingList: [] }] = await User.find(
+    {
+      _id: userId,
+    },
+
+    "shoppingList"
+  );
+
+  if (shoppingList.length !== 0) {
+    ingredients.forEach(ingredient => {
+      const index = shoppingList.findIndex(
+        slIngredient => slIngredient.ingredientId.toString() === ingredient.id
+      );
+
+      if (index >= 0) {
+        const measures = shoppingList[index].measures.filter(
+          measure => measure.recipeId.toString() !== recipeId
+        );
+        console.log(ingredient.id, measures.length, shoppingList[index].measures.length);
+        if (measures.length > 0) {
+          shoppingList[index].measures = [...measures];
+        } else shoppingList.splice(index, 1);
+      }
+    });
+  } else return res.json({ message: "Shopping list is empty.", shoppingList });
+
+  const { shoppingList: result } = await User.findOneAndUpdate(
+    { _id: userId },
+    { shoppingList: [...shoppingList] },
+    {
+      new: true,
+    }
+  )
+    .populate("shoppingList.ingredientId")
+    .populate({
+      path: "shoppingList.measures.recipeId",
+      select: "title description thumb",
+    });
+
+  res.json({ message: "Ingredients removed", shoppingList: result });
+}
+
+async function clear(req, res) {
+  const { _id: userId } = req.user;
+
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { shoppingList: [] },
+    {
+      new: true,
+    }
+  );
+
+  res.json({ message: "Shopping list cleared" });
+}
+
 module.exports = {
   getAll: ctrlWrapper(getAll),
   create: ctrlWrapper(create),
   deleteById: ctrlWrapper(deleteById),
+  addAllInRecipe: ctrlWrapper(addAllInRecipe),
+  delAllInRecipe: ctrlWrapper(delAllInRecipe),
+  clear: ctrlWrapper(clear),
 };

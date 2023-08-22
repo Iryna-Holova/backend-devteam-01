@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateBody, authenticate } = require("../../middlewares");
+const { validateBody, authenticate, validateId } = require("../../middlewares");
 const shoppingListController = require("../../controllers/shopping-list-controller");
 const { shoppingListSchemas } = require("../../models/shopping-list-model");
 
@@ -87,6 +87,9 @@ router.patch(
  *         description: Internal Server Error
  */
 
+router.patch("/clear", authenticate, shoppingListController.clear);
+router.patch("/recipe/:id", authenticate, validateId, shoppingListController.addAllInRecipe);
+
 router.delete(
   "/",
   authenticate,
@@ -132,5 +135,7 @@ router.delete(
  *               $ref: '#/components/schemas/500'
  *         description: Internal Server Error
  */
+
+router.delete("/recipe/:id", authenticate, validateId, shoppingListController.delAllInRecipe);
 
 module.exports = router;
